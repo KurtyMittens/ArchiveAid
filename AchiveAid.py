@@ -1,14 +1,31 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+import organizer
 import sys
 
 
 class Ui_ArchiveAid(QtWidgets.QMainWindow):
     def __init__(self):
+        self.file_ext =['.aif', ".cda", ".mid", ".midi", ".mp3", ".mpa", ".ogg", ".wav",
+                        ".wma", ".wpi", '.7z', ".arj",".deb", ".pkg", ".rar", ".rpm",
+                        ".tar.gz", ".z", ".zip", ".bin", ".dmg", ".iso", ".toast", ".vcd",
+                        ".csv", ".dat", ".db", ".dbf", ".log", ".mdb", ".sav", ".sql",
+                        ".tar", ".xml", ".apk", ".bat", ".bin",".cgi", ".pl", ".com", ".exe",
+                        ".gadget", ".jar", ".msi", ".py", ".wsf", ".fnt", ".fon", ".otf", ".ttf",
+                        ".ai", ".bmp", ".gif", ".ico", ".jpeg", ".jpg", ".png", ".ps", ".psd",
+                        ".svg", ".tif", ".tiff", ".webp", ".key", ".odp", ".pps", ".ppt", ".pptx",
+                        ".ods", ".xls", ".xlsm", ".xlsx", ".3g2", ".3gp", ".avi", ".flv", ".h264", ".m4v",
+                        ".mkv", ".mov", ".mp4", ".mpg", ".mpeg", ".rm", ".swf", ".vob", ".webm", ".wmv",
+                        ".doc", ".docx", ".odt", ".pdf", ".rtf", ".tex", ".txt", ".wpd"]
         super().__init__()
         self.setupUi(self)
         self.show()
 
-    def addButtonFrame(self):
+    def get_file(self):
+        self.filename = QtWidgets.QFileDialog.getExistingDirectory()
+        if len(self.filename) != 0:
+          self.addButtonFrame(str(self.filename.split("/")[-1:][0]))
+
+    def addButtonFrame(self, filename):
         self.File_frames = QtWidgets.QFrame(self.scrollAreaWidgetContents)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -30,12 +47,14 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         font.setBold(True)
         font.setWeight(75)
         self.Filename_label.setFont(font)
+        self.Filename_label.setText(filename)
         self.Filename_label.setStyleSheet("background-color: rgb(195, 200, 211);\n"
                                           "color: rgb(0, 0, 0);\n"
                                           "")
         self.Filename_label.setObjectName("Filename_label")
         self.extension_select = QtWidgets.QComboBox(self.File_frames)
-        self.extension_select.setGeometry(QtCore.QRect(290, 40, 51, 21))
+        self.extension_select.setGeometry(QtCore.QRect(280, 40, 71, 21))
+        self.extension_select.addItems(sorted(self.file_ext))
         self.extension_select.setStyleSheet("background-color: rgb(255, 255, 255);\n"
                                             "color:rgb(0, 0, 0);\n"
                                             "")
@@ -51,17 +70,18 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         font.setBold(True)
         font.setWeight(75)
         self.extension_label.setFont(font)
+        self.extension_label.setText('Extensions')
         self.extension_label.setStyleSheet("color: rgb(0, 0, 0);")
         self.extension_label.setObjectName("extension_label")
-        self.add_btn_2 = QtWidgets.QPushButton(self.File_frames)
-        self.add_btn_2.setGeometry(QtCore.QRect(10, 10, 81, 71))
+        self.file_select_button = QtWidgets.QPushButton(self.File_frames)
+        self.file_select_button.setGeometry(QtCore.QRect(10, 10, 81, 71))
         font = QtGui.QFont()
         font.setFamily("JetBrainsMono NF SemiBold")
         font.setPointSize(14)
         font.setBold(True)
         font.setWeight(75)
-        self.add_btn_2.setFont(font)
-        self.add_btn_2.setStyleSheet("QPushButton{\n"
+        self.file_select_button.setFont(font)
+        self.file_select_button.setStyleSheet("QPushButton{\n"
                                      "    background-color:rgb(102, 111, 128);\n"
                                      "    border:2px;\n"
                                      "    border-radius:25px;\n"
@@ -71,13 +91,13 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                      "    background-color: rgb(251, 109, 108);\n"
                                      "    color:rgb(102, 111, 128)\n"
                                      "}")
-        self.add_btn_2.setText("")
+        self.file_select_button.setText("")
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("dev/../assets/file.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.add_btn_2.setIcon(icon2)
-        self.add_btn_2.setIconSize(QtCore.QSize(70, 70))
-        self.add_btn_2.setObjectName("add_btn_2")
-        self.add_btn_2.clicked.connect(lambda x: print("OH WOW"))
+        self.file_select_button.setIcon(icon2)
+        self.file_select_button.setIconSize(QtCore.QSize(70, 70))
+        self.file_select_button.setObjectName("file_select_button")
+        # self.file_select_button.clicked.connect(self.get_file)
         self.verticalLayout.addWidget(self.File_frames)
     
     def del_buttons(self):
@@ -96,7 +116,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         ArchiveAid.setMinimumSize(QtCore.QSize(450, 600))
         ArchiveAid.setMaximumSize(QtCore.QSize(450, 600))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("dev/../../../.designer/backup/PythonFiles/FileOrganizer/assets/logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("dev/../assets/logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         ArchiveAid.setWindowIcon(icon)
         ArchiveAid.setStyleSheet("background-color: rgb(251, 109, 108);")
         ArchiveAid.setUnifiedTitleAndToolBarOnMac(False)
@@ -125,6 +145,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.MenuButton.setIconSize(QtCore.QSize(50, 50))
         self.MenuButton.setCheckable(False)
         self.MenuButton.setObjectName("MenuButton")
+        
 
 
         self.TitleFrame = QtWidgets.QFrame(self.centralwidget)
@@ -157,9 +178,11 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
 
         self.Logo_pixmap = QtWidgets.QLabel(self.TitleFrame)
+        self.logo = QtGui.QPixmap("dev/../assets/logo.png")
         self.Logo_pixmap.setGeometry(QtCore.QRect(20, 7, 51, 41))
         self.Logo_pixmap.setStyleSheet("background-color: rgb(102, 111, 128);")
-        self.Logo_pixmap.setText("")
+        self.Logo_pixmap.setPixmap(self.logo)
+        self.Logo_pixmap.setScaledContents(True)
         self.Logo_pixmap.setObjectName("Logo_pixmap")
 
 
@@ -294,7 +317,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.add_btn.setIcon(icon3)
         self.add_btn.setIconSize(QtCore.QSize(35, 35))
         self.add_btn.setObjectName("add_btn")
-        self.add_btn.clicked.connect(self.addButtonFrame)
+        self.add_btn.clicked.connect(self.get_file)
 
         
         self.Refresh_btn = QtWidgets.QPushButton(self.FileFrame)
