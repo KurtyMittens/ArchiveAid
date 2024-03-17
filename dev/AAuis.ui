@@ -36,7 +36,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../../.designer/backup/PythonFiles/FileOrganizer/assets/logo.png</normaloff>../../../.designer/backup/PythonFiles/FileOrganizer/assets/logo.png</iconset>
+    <normaloff>../../../../.designer/backup/PythonFiles/FileOrganizer/assets/logo.png</normaloff>../../../../.designer/backup/PythonFiles/FileOrganizer/assets/logo.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(251, 109, 108);</string>
@@ -71,7 +71,7 @@ QPushButton::hover{
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../assets/menu.png</normaloff>../assets/menu.png</iconset>
+      <normaloff>../../../.designer/assets/menu.png</normaloff>../../../.designer/assets/menu.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -301,7 +301,7 @@ color: rgb(0, 0, 0);
          <widget class="QComboBox" name="extension_select">
           <property name="geometry">
            <rect>
-            <x>290</x>
+            <x>280</x>
             <y>40</y>
             <width>51</width>
             <height>21</height>
@@ -346,7 +346,7 @@ color:rgb(0, 0, 0);
            <string>Extension</string>
           </property>
          </widget>
-         <widget class="QLabel" name="file_pixmap">
+         <widget class="QPushButton" name="add_btn_2">
           <property name="geometry">
            <rect>
             <x>10</x>
@@ -355,57 +355,40 @@ color:rgb(0, 0, 0);
             <height>71</height>
            </rect>
           </property>
+          <property name="font">
+           <font>
+            <family>JetBrainsMono NF SemiBold</family>
+            <pointsize>14</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(102, 111, 128);</string>
+           <string notr="true">QPushButton{
+	background-color:rgb(102, 111, 128);
+	border:2px;
+	border-radius:25px;
+}
+
+QPushButton:pressed{
+	background-color: rgb(251, 109, 108);
+	color:rgb(102, 111, 128)
+}</string>
           </property>
           <property name="text">
            <string/>
           </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>../../../.designer/assets/file.png</normaloff>../../../.designer/assets/file.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>70</width>
+            <height>70</height>
+           </size>
+          </property>
          </widget>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="AddFrameBtn">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>380</width>
-           <height>90</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton{
-	background-color: rgb(195, 200, 211);
-	border: 2px ;
-    border-radius: 15px;
-}
-QPushButton::pressed{
-	background-color:  rgb(195, 200, 211);
-	border: 10px solid  #666f80;
-    border-radius: 15px;
-}</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>../assets/add.png</normaloff>../assets/add.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>50</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
         </widget>
        </item>
       </layout>
@@ -450,6 +433,104 @@ QPushButton:pressed{
       <string>ORGANIZE</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="add_btn">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>460</y>
+       <width>51</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>JetBrainsMono NF SemiBold</family>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{
+	background-color: rgb(251, 109, 108);
+	border:2px;
+	border-radius:25px;
+	color:rgb(255, 255, 255);
+}
+
+QPushButton:hover{
+	background-color: rgb(255, 255, 255);
+	color: rgb(251, 109, 108);
+}
+
+QPushButton:pressed{
+	background-color: rgb(195, 200, 211);
+	color:rgb(102, 111, 128)
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../../../.designer/assets/add.png</normaloff>../../../.designer/assets/add.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>35</width>
+       <height>35</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="Refresh_btn">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>460</y>
+       <width>51</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>JetBrainsMono NF SemiBold</family>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{
+	background-color: rgb(251, 109, 108);
+	border:2px;
+	border-radius:25px;
+	color:rgb(255, 255, 255);
+}
+
+QPushButton:hover{
+	background-color: rgb(255, 255, 255);
+	color: rgb(251, 109, 108);
+}
+
+QPushButton:pressed{
+	background-color: rgb(195, 200, 211);
+	color:rgb(102, 111, 128)
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../../../.designer/assets/reset.png</normaloff>../../../.designer/assets/reset.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>40</width>
+       <height>40</height>
+      </size>
+     </property>
+    </widget>
    </widget>
    <widget class="QFrame" name="OptionFrame">
     <property name="geometry">
@@ -492,7 +573,7 @@ QPushButton::hover{
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../assets/back.png</normaloff>../assets/back.png</iconset>
+       <normaloff>../../../.designer/assets/back.png</normaloff>../../../.designer/assets/back.png</iconset>
      </property>
      <property name="iconSize">
       <size>

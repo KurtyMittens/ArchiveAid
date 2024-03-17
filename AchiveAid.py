@@ -1,5 +1,4 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-import organizer
 import sys
 
 
@@ -19,6 +18,16 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.show()
+
+    def font_(self, point_size=None, weight=75, bold = True, family="JetBrainsMono NF SemiBold"):
+        font = QtGui.QFont()
+        font.setFamily(family)
+        if point_size is not None:
+          font.setPointSize(point_size)
+        font.setBold(bold)
+        font.setWeight(weight)
+
+        return font
 
     def get_file(self):
         self.filename = QtWidgets.QFileDialog.getExistingDirectory()
@@ -41,17 +50,14 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.File_frames.setObjectName("File_frames")
         self.Filename_label = QtWidgets.QLabel(self.File_frames)
         self.Filename_label.setGeometry(QtCore.QRect(100, 25, 151, 41))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NFM SemiBold")
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(75)
-        self.Filename_label.setFont(font)
+        self.Filename_label.setFont(self.font_(point_size=14))
         self.Filename_label.setText(filename)
         self.Filename_label.setStyleSheet("background-color: rgb(195, 200, 211);\n"
                                           "color: rgb(0, 0, 0);\n"
                                           "")
         self.Filename_label.setObjectName("Filename_label")
+
+
         self.extension_select = QtWidgets.QComboBox(self.File_frames)
         self.extension_select.setGeometry(QtCore.QRect(280, 40, 71, 21))
         self.extension_select.addItems(sorted(self.file_ext))
@@ -64,23 +70,14 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.extension_select.setObjectName("extension_select")
         self.extension_label = QtWidgets.QLabel(self.File_frames)
         self.extension_label.setGeometry(QtCore.QRect(280, 20, 71, 21))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NFM SemiBold")
-        font.setPointSize(10)
-        font.setBold(True)
-        font.setWeight(75)
-        self.extension_label.setFont(font)
+        self.extension_label.setFont(self.font_(point_size=10))
         self.extension_label.setText('Extensions')
         self.extension_label.setStyleSheet("color: rgb(0, 0, 0);")
         self.extension_label.setObjectName("extension_label")
+
         self.file_select_button = QtWidgets.QPushButton(self.File_frames)
         self.file_select_button.setGeometry(QtCore.QRect(10, 10, 81, 71))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NF SemiBold")
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(75)
-        self.file_select_button.setFont(font)
+        self.file_select_button.setFont(self.font_(point_size=14))
         self.file_select_button.setStyleSheet("QPushButton{\n"
                                      "    background-color:rgb(102, 111, 128);\n"
                                      "    border:2px;\n"
@@ -91,18 +88,34 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                      "    background-color: rgb(251, 109, 108);\n"
                                      "    color:rgb(102, 111, 128)\n"
                                      "}")
-        self.file_select_button.setText("")
+
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("dev/../assets/file.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.file_select_button.setIcon(icon2)
         self.file_select_button.setIconSize(QtCore.QSize(70, 70))
         self.file_select_button.setObjectName("file_select_button")
-        # self.file_select_button.clicked.connect(self.get_file)
         self.verticalLayout.addWidget(self.File_frames)
     
     def del_buttons(self):
         while self.verticalLayout.count() > 0:
             self.verticalLayout.itemAt(0).widget().setParent(None)
+    
+    def optionFrameAnimation(self):      
+        hidden = -250
+        self.animate = QtCore.QPropertyAnimation(self.OptionFrame, b'geometry')
+        if self.OptionFrame.x() == hidden:
+            self.animate.setStartValue(
+                QtCore.QRect(self.OptionFrame.x(), self.OptionFrame.y(), self.OptionFrame.width(), self.OptionFrame.height()))
+            self.animate.setEndValue(
+                QtCore.QRect(0, self.OptionFrame.y(), self.OptionFrame.width(), self.OptionFrame.height()))
+            self.animate.start()
+
+        else:
+            self.animate.setStartValue(
+                QtCore.QRect(self.OptionFrame.x(), self.OptionFrame.y(), self.OptionFrame.width(), self.OptionFrame.height()))
+            self.animate.setEndValue(
+                QtCore.QRect(hidden, self.OptionFrame.y(), self.OptionFrame.width(), self.OptionFrame.height()))
+            self.animate.start()
 
     def setupUi(self, ArchiveAid):
         ArchiveAid.setObjectName("ArchiveAid")
@@ -119,7 +132,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         icon.addPixmap(QtGui.QPixmap("dev/../assets/logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         ArchiveAid.setWindowIcon(icon)
         ArchiveAid.setStyleSheet("background-color: rgb(251, 109, 108);")
-        ArchiveAid.setUnifiedTitleAndToolBarOnMac(False)
+        ArchiveAid.setUnifiedTitleAndToolBarOnMac(True)
 
 
         self.centralwidget = QtWidgets.QWidget(ArchiveAid)
@@ -145,6 +158,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.MenuButton.setIconSize(QtCore.QSize(50, 50))
         self.MenuButton.setCheckable(False)
         self.MenuButton.setObjectName("MenuButton")
+        self.MenuButton.clicked.connect(self.optionFrameAnimation)
         
 
 
@@ -163,12 +177,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
         self.title_label = QtWidgets.QLabel(self.TitleFrame)
         self.title_label.setGeometry(QtCore.QRect(90, 7, 251, 41))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NFM SemiBold")
-        font.setPointSize(28)
-        font.setBold(True)
-        font.setWeight(75)
-        self.title_label.setFont(font)
+        self.title_label.setFont(self.font_(point_size=28))
         self.title_label.setStyleSheet("#title_label{\n"
                                        "    background-color: rgb(102, 111, 128);\n"
                                        "    \n"
@@ -178,7 +187,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
 
         self.Logo_pixmap = QtWidgets.QLabel(self.TitleFrame)
-        self.logo = QtGui.QPixmap("dev/../assets/logo.png")
+        self.logo = QtGui.QPixmap("assets/logo.png")
         self.Logo_pixmap.setGeometry(QtCore.QRect(20, 7, 51, 41))
         self.Logo_pixmap.setStyleSheet("background-color: rgb(102, 111, 128);")
         self.Logo_pixmap.setPixmap(self.logo)
@@ -256,18 +265,12 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.verticalLayout.setObjectName("verticalLayout")
 
 
-
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
 
         self.OrganizeBtn = QtWidgets.QPushButton(self.FileFrame)
         self.OrganizeBtn.setGeometry(QtCore.QRect(150, 460, 131, 51))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NF SemiBold")
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(75)
-        self.OrganizeBtn.setFont(font)
+        self.OrganizeBtn.setFont(self.font_(point_size=14))
         self.OrganizeBtn.setStyleSheet("QPushButton{\n"
                                        "    background-color: rgb(251, 109, 108);\n"
                                        "    border:2px;\n"
@@ -289,12 +292,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
         self.add_btn = QtWidgets.QPushButton(self.FileFrame)
         self.add_btn.setGeometry(QtCore.QRect(90, 460, 51, 51))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NF SemiBold")
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(75)
-        self.add_btn.setFont(font)
+        self.add_btn.setFont(self.font_(point_size=14))
         self.add_btn.setStyleSheet("QPushButton{\n"
                                    "    background-color: rgb(251, 109, 108);\n"
                                    "    border:2px;\n"
@@ -322,12 +320,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         
         self.Refresh_btn = QtWidgets.QPushButton(self.FileFrame)
         self.Refresh_btn.setGeometry(QtCore.QRect(290, 460, 51, 51))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NF SemiBold")
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(75)
-        self.Refresh_btn.setFont(font)
+        self.Refresh_btn.setFont(self.font_(point_size=14))
         self.Refresh_btn.setStyleSheet("QPushButton{\n"
                                        "    background-color: rgb(251, 109, 108);\n"
                                        "    border:2px;\n"
@@ -354,11 +347,11 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
 
         self.OptionFrame = QtWidgets.QFrame(self.centralwidget)
-        self.OptionFrame.setGeometry(QtCore.QRect(0, 0, 251, 601))
+        self.OptionFrame.setGeometry(QtCore.QRect(-250, 0, 251, 601))
         self.OptionFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.OptionFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.OptionFrame.setObjectName("OptionFrame")
-        self.OptionFrame.hide()
+
 
 
         self.back_button = QtWidgets.QPushButton(self.OptionFrame)
@@ -380,16 +373,12 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.back_button.setIconSize(QtCore.QSize(50, 50))
         self.back_button.setCheckable(False)
         self.back_button.setObjectName("back_button")
+        self.back_button.clicked.connect(self.optionFrameAnimation)
 
 
         self.option_label = QtWidgets.QLabel(self.OptionFrame)
         self.option_label.setGeometry(QtCore.QRect(20, 15, 161, 41))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NFM SemiBold")
-        font.setPointSize(28)
-        font.setBold(True)
-        font.setWeight(75)
-        self.option_label.setFont(font)
+        self.option_label.setFont(self.font_(point_size=28))
         self.option_label.setStyleSheet("color: rgb(255, 255, 255);\n"
 "")
         self.option_label.setObjectName("option_label")
@@ -408,20 +397,16 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.OptionSelection.setObjectName("OptionSelection")
 
 
-        self.historychace = QtWidgets.QPushButton(self.OptionSelection)
-        self.historychace.setGeometry(QtCore.QRect(10, 250, 210, 70))
+        self.historychange = QtWidgets.QPushButton(self.OptionSelection)
+        self.historychange.setGeometry(QtCore.QRect(10, 250, 210, 70))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.historychace.sizePolicy().hasHeightForWidth())
-        self.historychace.setSizePolicy(sizePolicy)
-        self.historychace.setMinimumSize(QtCore.QSize(210, 70))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NF SemiBold")
-        font.setBold(True)
-        font.setWeight(75)
-        self.historychace.setFont(font)
-        self.historychace.setStyleSheet("QPushButton{\n"
+        sizePolicy.setHeightForWidth(self.historychange.sizePolicy().hasHeightForWidth())
+        self.historychange.setSizePolicy(sizePolicy)
+        self.historychange.setMinimumSize(QtCore.QSize(210, 70))
+        self.historychange.setFont(self.font_())
+        self.historychange.setStyleSheet("QPushButton{\n"
                                         "    background-color: rgb(195, 200, 211);\n"
                                         "    border:2 px;\n"
                                         "    border-radius:25px;\n"
@@ -433,7 +418,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                         "    border-radius:25px;\n"
                                         "    color:rgb(0, 0, 0);\n"
                                         "}")
-        self.historychace.setObjectName("historychace")
+        self.historychange.setObjectName("historychace")
 
 
         self.pickundoselaercion = QtWidgets.QPushButton(self.OptionSelection)
@@ -444,11 +429,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         sizePolicy.setHeightForWidth(self.pickundoselaercion.sizePolicy().hasHeightForWidth())
         self.pickundoselaercion.setSizePolicy(sizePolicy)
         self.pickundoselaercion.setMinimumSize(QtCore.QSize(210, 70))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NF SemiBold")
-        font.setBold(True)
-        font.setWeight(75)
-        self.pickundoselaercion.setFont(font)
+        self.pickundoselaercion.setFont(self.font_())
         self.pickundoselaercion.setStyleSheet("QPushButton{\n"
                                               "    background-color: rgb(195, 200, 211);\n"
                                               "    border:2 px;\n"
@@ -472,11 +453,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         sizePolicy.setHeightForWidth(self.undo_last_button.sizePolicy().hasHeightForWidth())
         self.undo_last_button.setSizePolicy(sizePolicy)
         self.undo_last_button.setMinimumSize(QtCore.QSize(210, 70))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NF SemiBold")
-        font.setBold(True)
-        font.setWeight(75)
-        self.undo_last_button.setFont(font)
+        self.undo_last_button.setFont(self.font_())
         self.undo_last_button.setStyleSheet("QPushButton{\n"
                                             "    background-color: rgb(195, 200, 211);\n"
                                             "    border:2 px;\n"
@@ -500,11 +477,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         sizePolicy.setHeightForWidth(self.file_sourceselection.sizePolicy().hasHeightForWidth())
         self.file_sourceselection.setSizePolicy(sizePolicy)
         self.file_sourceselection.setMinimumSize(QtCore.QSize(210, 70))
-        font = QtGui.QFont()
-        font.setFamily("JetBrainsMono NF SemiBold")
-        font.setBold(True)
-        font.setWeight(75)
-        self.file_sourceselection.setFont(font)
+        self.file_sourceselection.setFont(self.font_())
         self.file_sourceselection.setStyleSheet("QPushButton{\n"
                                                 "    background-color: rgb(195, 200, 211);\n"
                                                 "    border:2 px;\n"
@@ -527,11 +500,10 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         _translate = QtCore.QCoreApplication.translate
         ArchiveAid.setWindowTitle(_translate("ArchiveAid", "ArchiveAid"))
         self.title_label.setText(_translate("ArchiveAid", "ARCHIVE/AID"))
-        #self.Filename_label.setText(_translate("ArchiveAid", "Filename"))
-        #self.extension_label.setText(_translate("ArchiveAid", "Extension"))
+
         self.OrganizeBtn.setText(_translate("ArchiveAid", "ORGANIZE"))
         self.option_label.setText(_translate("ArchiveAid", "OPTIONS"))
-        self.historychace.setText(_translate("ArchiveAid", "HISTORY CACHE"))
+        self.historychange.setText(_translate("ArchiveAid", "HISTORY CACHE"))
         self.pickundoselaercion.setText(_translate("ArchiveAid", "UNDO SELECTED \n"
 "ORGANIZATION"))
         self.undo_last_button.setText(_translate("ArchiveAid", "UNDO LAST \n"
