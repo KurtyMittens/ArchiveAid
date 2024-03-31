@@ -4,17 +4,6 @@ import sys
 
 class Ui_ArchiveAid(QtWidgets.QMainWindow):
     def __init__(self):
-        self.file_ext =['.aif', ".cda", ".mid", ".midi", ".mp3", ".mpa", ".ogg", ".wav",
-                        ".wma", ".wpi", '.7z', ".arj",".deb", ".pkg", ".rar", ".rpm",
-                        ".tar.gz", ".z", ".zip", ".bin", ".dmg", ".iso", ".toast", ".vcd",
-                        ".csv", ".dat", ".db", ".dbf", ".log", ".mdb", ".sav", ".sql",
-                        ".tar", ".xml", ".apk", ".bat", ".bin",".cgi", ".pl", ".com", ".exe",
-                        ".gadget", ".jar", ".msi", ".py", ".wsf", ".fnt", ".fon", ".otf", ".ttf",
-                        ".ai", ".bmp", ".gif", ".ico", ".jpeg", ".jpg", ".png", ".ps", ".psd",
-                        ".svg", ".tif", ".tiff", ".webp", ".key", ".odp", ".pps", ".ppt", ".pptx",
-                        ".ods", ".xls", ".xlsm", ".xlsx", ".3g2", ".3gp", ".avi", ".flv", ".h264", ".m4v",
-                        ".mkv", ".mov", ".mp4", ".mpg", ".mpeg", ".rm", ".swf", ".vob", ".webm", ".wmv",
-                        ".doc", ".docx", ".odt", ".pdf", ".rtf", ".tex", ".txt", ".wpd"]
         super().__init__()
         self.setupUi(self)
         self.show()
@@ -60,13 +49,10 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
         self.extension_select = QtWidgets.QComboBox(self.File_frames)
         self.extension_select.setGeometry(QtCore.QRect(280, 40, 71, 21))
-        self.extension_select.addItems(sorted(self.file_ext))
         self.extension_select.setStyleSheet("background-color: rgb(255, 255, 255);\n"
                                             "color:rgb(0, 0, 0);\n"
                                             "")
         self.extension_select.setEditable(True)
-        self.extension_select.setCurrentText("")
-        self.extension_select.setPlaceholderText("")
         self.extension_select.setObjectName("extension_select")
         self.extension_label = QtWidgets.QLabel(self.File_frames)
         self.extension_label.setGeometry(QtCore.QRect(280, 20, 71, 21))
@@ -151,8 +137,8 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                       "    border: 2px solid #C3C8D3;\n"
                                       "    border-radius: 15px;\n"
                                       "}")
-        self.MenuButton.setText("")
         icon1 = QtGui.QIcon()
+        
         icon1.addPixmap(QtGui.QPixmap("dev/../assets/menu.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.MenuButton.setIcon(icon1)
         self.MenuButton.setIconSize(QtCore.QSize(50, 50))
