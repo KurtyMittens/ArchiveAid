@@ -235,6 +235,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                       "    }\n"
                                       "\n"
                                       "")
+        
         self.scrollArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
         self.scrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.scrollArea.setWidgetResizable(True)
@@ -385,62 +386,25 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
         self.historychange = QtWidgets.QPushButton(self.OptionSelection)
         self.historychange.setGeometry(QtCore.QRect(10, 250, 210, 70))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.historychange.sizePolicy().hasHeightForWidth())
-        self.historychange.setSizePolicy(sizePolicy)
-        self.historychange.setMinimumSize(QtCore.QSize(210, 70))
-        self.historychange.setFont(self.font_())
-        self.historychange.setStyleSheet("QPushButton{\n"
-                                        "    background-color: rgb(195, 200, 211);\n"
-                                        "    border:2 px;\n"
-                                        "    border-radius:25px;\n"
-                                        "    color:rgb(0, 0, 0);\n"
-                                        "}\n"
-                                        "QPushButton::hover{\n"
-                                        "    background-color: rgb(251, 109, 108);\n"
-                                        "    border:2 px;\n"
-                                        "    border-radius:25px;\n"
-                                        "    color:rgb(0, 0, 0);\n"
-                                        "}")
-        self.historychange.setObjectName("historychace")
-
 
         self.pickundoselaercion = QtWidgets.QPushButton(self.OptionSelection)
         self.pickundoselaercion.setGeometry(QtCore.QRect(10, 170, 210, 70))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pickundoselaercion.sizePolicy().hasHeightForWidth())
-        self.pickundoselaercion.setSizePolicy(sizePolicy)
-        self.pickundoselaercion.setMinimumSize(QtCore.QSize(210, 70))
-        self.pickundoselaercion.setFont(self.font_())
-        self.pickundoselaercion.setStyleSheet("QPushButton{\n"
-                                              "    background-color: rgb(195, 200, 211);\n"
-                                              "    border:2 px;\n"
-                                              "    border-radius:25px;\n"
-                                              "    color:rgb(0, 0, 0);\n"
-                                              "}\n"
-                                              "QPushButton::hover{\n"
-                                              "    background-color: rgb(251, 109, 108);\n"
-                                              "    border:2 px;\n"
-                                              "    border-radius:25px;\n"
-                                              "    color:rgb(0, 0, 0);\n"
-                                              "}")
-        self.pickundoselaercion.setObjectName("pickundoselaercion")
-
 
         self.undo_last_button = QtWidgets.QPushButton(self.OptionSelection)
         self.undo_last_button.setGeometry(QtCore.QRect(10, 90, 210, 70))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.undo_last_button.sizePolicy().hasHeightForWidth())
-        self.undo_last_button.setSizePolicy(sizePolicy)
-        self.undo_last_button.setMinimumSize(QtCore.QSize(210, 70))
-        self.undo_last_button.setFont(self.font_())
-        self.undo_last_button.setStyleSheet("QPushButton{\n"
+
+        self.file_sourceselection = QtWidgets.QPushButton(self.OptionSelection)
+        self.file_sourceselection.setGeometry(QtCore.QRect(10, 10, 210, 70))
+
+        for button in [self.historychange, self.pickundoselaercion, self.undo_last_button, self.file_sourceselection]:
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(button.sizePolicy().hasHeightForWidth())
+            button.setSizePolicy(sizePolicy)
+            button.setMinimumSize(QtCore.QSize(210, 70))
+            button.setFont(self.font_())
+            button.setStyleSheet("QPushButton{\n"
                                             "    background-color: rgb(195, 200, 211);\n"
                                             "    border:2 px;\n"
                                             "    border-radius:25px;\n"
@@ -452,30 +416,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                             "    border-radius:25px;\n"
                                             "    color:rgb(0, 0, 0);\n"
                                             "}")
-        self.undo_last_button.setObjectName("undo_last_button")
-
-
-        self.file_sourceselection = QtWidgets.QPushButton(self.OptionSelection)
-        self.file_sourceselection.setGeometry(QtCore.QRect(10, 10, 210, 70))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.file_sourceselection.sizePolicy().hasHeightForWidth())
-        self.file_sourceselection.setSizePolicy(sizePolicy)
-        self.file_sourceselection.setMinimumSize(QtCore.QSize(210, 70))
-        self.file_sourceselection.setFont(self.font_())
-        self.file_sourceselection.setStyleSheet("QPushButton{\n"
-                                                "    background-color: rgb(195, 200, 211);\n"
-                                                "    border:2 px;\n"
-                                                "    border-radius:25px;\n"
-                                                "    color:rgb(0, 0, 0);\n"
-                                                "}\n"
-                                                "QPushButton::hover{\n"
-                                                "    background-color: rgb(251, 109, 108);\n"
-                                                "    border:2 px;\n"
-                                                "    border-radius:25px;\n"
-                                                "    color:rgb(0, 0, 0);\n"
-                                                "}")
+        
         self.file_sourceselection.setObjectName("file_sourceselection")
         ArchiveAid.setCentralWidget(self.centralwidget)
 
