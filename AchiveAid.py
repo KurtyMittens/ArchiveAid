@@ -1,12 +1,20 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-import sys
-
+from config import setting
+import sys, os
 
 class Ui_ArchiveAid(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.show()
+        self.load_start()
+
+    def load_start(self):
+        run_recent = setting.Recent()
+        for i in run_recent.get_filepath():
+            self.addButtonFrame(i[0])
+        self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {run_recent.get_sourcepath()}")
+        self.historychange.setText(f"HISTORY CACHE: \n {os.stat('histcache').st_size} bytes")
 
     def font_(self, point_size=None, weight=75, bold = True, family="JetBrainsMono NF SemiBold"):
         font = QtGui.QFont()
@@ -15,13 +23,12 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
           font.setPointSize(point_size)
         font.setBold(bold)
         font.setWeight(weight)
-
         return font
 
     def get_file(self):
         self.filename = QtWidgets.QFileDialog.getExistingDirectory()
         if len(self.filename) != 0:
-          self.addButtonFrame(str(self.filename.split("/")[-1:][0]))
+          self.addButtonFrame(self.filename)
 
     def addButtonFrame(self, filename):
         self.File_frames = QtWidgets.QFrame(self.scrollAreaWidgetContents)
@@ -37,14 +44,24 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.File_frames.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.File_frames.setFrameShadow(QtWidgets.QFrame.Raised)
         self.File_frames.setObjectName("File_frames")
+
         self.Filename_label = QtWidgets.QLabel(self.File_frames)
-        self.Filename_label.setGeometry(QtCore.QRect(100, 25, 151, 41))
-        self.Filename_label.setFont(self.font_(point_size=14))
-        self.Filename_label.setText(filename)
+        self.Filename_label.setGeometry(QtCore.QRect(100, 15, 151, 41))
+        self.Filename_label.setFont(self.font_(point_size=12))
+        self.Filename_label.setText(filename.split("/")[-1:][0])
         self.Filename_label.setStyleSheet("background-color: rgb(195, 200, 211);\n"
                                           "color: rgb(0, 0, 0);\n"
                                           "")
         self.Filename_label.setObjectName("Filename_label")
+
+        self.Filepath_label = QtWidgets.QLabel(self.File_frames)
+        self.Filepath_label.setGeometry(QtCore.QRect(100, 45, 160, 30))
+        self.Filepath_label.setFont(self.font_(point_size=8))
+        self.Filepath_label.setText(filename)
+        self.Filepath_label.setStyleSheet("background-color: rgb(195, 200, 211);\n"
+                                          "color: rgb(0, 0, 0);\n"
+                                          "")
+        self.Filepath_label.setObjectName("Filepath_label")
 
 
         self.extension_select = QtWidgets.QComboBox(self.File_frames)
@@ -195,7 +212,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
 
         self.scrollArea = QtWidgets.QScrollArea(self.FileFrame)
-        self.scrollArea.setGeometry(QtCore.QRect(20, 20, 401, 431))
+        self.scrollArea.setGeometry(QtCore.QRect(5, 20, 411, 431))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -366,8 +383,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.option_label = QtWidgets.QLabel(self.OptionFrame)
         self.option_label.setGeometry(QtCore.QRect(20, 15, 161, 41))
         self.option_label.setFont(self.font_(point_size=28))
-        self.option_label.setStyleSheet("color: rgb(255, 255, 255);\n"
-"")
+        self.option_label.setStyleSheet("color: rgb(255, 255, 255);\n")
         self.option_label.setObjectName("option_label")
 
 
@@ -430,12 +446,9 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
         self.OrganizeBtn.setText(_translate("ArchiveAid", "ORGANIZE"))
         self.option_label.setText(_translate("ArchiveAid", "OPTIONS"))
-        self.historychange.setText(_translate("ArchiveAid", "HISTORY CACHE"))
-        self.pickundoselaercion.setText(_translate("ArchiveAid", "UNDO SELECTED \n"
-"ORGANIZATION"))
-        self.undo_last_button.setText(_translate("ArchiveAid", "UNDO LAST \n"
-"ORGANIZATION"))
-        self.file_sourceselection.setText(_translate("ArchiveAid", "CURRENT FILE SOURCE:"))
+        self.pickundoselaercion.setText(_translate("ArchiveAid", "UNDO SELECTED \n ORGANIZATION"))
+        self.undo_last_button.setText(_translate("ArchiveAid", "UNDO LAST \n ORGANIZATION"))
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
