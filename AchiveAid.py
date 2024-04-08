@@ -4,12 +4,14 @@ import sys, os
 
 class Ui_ArchiveAid(QtWidgets.QMainWindow):
     def __init__(self):
+        """It's the constructor, loading the recent file, if its empty then it will prompt one to add your default"""
         super().__init__()
         self.setupUi(self)
         self.show()
         self.load_start()
 
     def load_start(self):
+        """Loads all the recent saved configurations, follows recent.conf in the config file"""
         run_recent = setting.Recent()
         for i in run_recent.get_filepath():
             self.addButtonFrame(i[0])
@@ -17,6 +19,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.historychange.setText(f"HISTORY CACHE: \n {os.stat('histcache').st_size} bytes")
 
     def font_(self, point_size=None, weight=75, bold = True, family="JetBrainsMono NF SemiBold"):
+        """Returns the font, you can change it your own desire"""
         font = QtGui.QFont()
         font.setFamily(family)
         if point_size is not None:
@@ -26,11 +29,19 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         return font
 
     def get_file(self):
+        """gets the directory to put the organized files"""
         self.filename = QtWidgets.QFileDialog.getExistingDirectory()
         if len(self.filename) != 0:
           self.addButtonFrame(self.filename)
 
+    def get_source(self):
+        """get the source directory you want to organize"""
+        self.source_file = QtWidgets.QFileDialog.getExistingDirectory()
+        if len(self.source_file) != 0:
+            self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {self.source_file}")
+
     def addButtonFrame(self, filename):
+        """Add Files in the form of a button in the scroll area"""
         self.File_frames = QtWidgets.QFrame(self.scrollAreaWidgetContents)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -100,10 +111,20 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.verticalLayout.addWidget(self.File_frames)
     
     def del_buttons(self):
+        """Deletes all the buttons you done"""
         while self.verticalLayout.count() > 0:
             self.verticalLayout.itemAt(0).widget().setParent(None)
-    
-    def optionFrameAnimation(self):      
+
+    def organize_(self):
+        config = []
+        for i in range(self.verticalLayout.count()):
+            file = [self.verticalLayout.itemAt(i).widget().children()[1].text(), self.verticalLayout.itemAt(i).widget().children()[2].currentText()]
+            config.append(file)
+        print(config)
+
+
+    def optionFrameAnimation(self):
+        """Force the animation of the Option Frame"""
         hidden = -250
         self.animate = QtCore.QPropertyAnimation(self.OptionFrame, b'geometry')
         if self.OptionFrame.x() == hidden:
@@ -121,6 +142,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
             self.animate.start()
 
     def setupUi(self, ArchiveAid):
+        """The main Config for the Software"""
         ArchiveAid.setObjectName("ArchiveAid")
         ArchiveAid.setWindowModality(QtCore.Qt.WindowModal)
         ArchiveAid.resize(450, 600)
@@ -292,6 +314,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                        "    color:rgb(102, 111, 128)\n"
                                        "}")
         self.OrganizeBtn.setObjectName("OrganizeBtn")
+        self.OrganizeBtn.clicked.connect(self.organize_)
 
 
         self.add_btn = QtWidgets.QPushButton(self.FileFrame)
@@ -411,6 +434,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
         self.file_sourceselection = QtWidgets.QPushButton(self.OptionSelection)
         self.file_sourceselection.setGeometry(QtCore.QRect(10, 10, 210, 70))
+        self.file_sourceselection.clicked.connect(self.get_source)
 
         for button in [self.historychange, self.pickundoselaercion, self.undo_last_button, self.file_sourceselection]:
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
