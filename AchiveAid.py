@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import setting
-import sys, os
+import sys, os, shutil
 
 class Ui_ArchiveAid(QtWidgets.QMainWindow):
     def __init__(self):
@@ -14,8 +14,8 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         """Loads all the recent saved configurations, follows recent.conf in the config file"""
         run_recent = setting.Recent()
         for i in run_recent.get_filepath():
-            self.addButtonFrame(i[0])
-        self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {run_recent.get_sourcepath()}")
+            self.addButtonFrame(i[0], i[1])
+        self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {run_recent.get_sourcepath()[0]}")
         self.historychange.setText(f"HISTORY CACHE: \n {os.stat('histcache').st_size} bytes")
 
     def font_(self, point_size=None, weight=75, bold = True, family="JetBrainsMono NF SemiBold"):
@@ -40,9 +40,10 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         if len(self.source_file) != 0:
             self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {self.source_file}")
 
-    def addButtonFrame(self, filename):
+    def addButtonFrame(self, filename, recent_class=None):
         """Add Files in the form of a button in the scroll area"""
         self.File_frames = QtWidgets.QFrame(self.scrollAreaWidgetContents)
+        items = setting.Files_extensions()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -76,12 +77,13 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
 
         self.extension_select = QtWidgets.QComboBox(self.File_frames)
-        self.extension_select.setGeometry(QtCore.QRect(280, 40, 71, 21))
+        self.extension_select.setGeometry(QtCore.QRect(280, 40, 90, 21))
         self.extension_select.setStyleSheet("background-color: rgb(255, 255, 255);\n"
                                             "color:rgb(0, 0, 0);\n"
                                             "")
         self.extension_select.setEditable(True)
         self.extension_select.setObjectName("extension_select")
+        self.extension_select.addItems(items.get_class_ext())
         self.extension_label = QtWidgets.QLabel(self.File_frames)
         self.extension_label.setGeometry(QtCore.QRect(280, 20, 71, 21))
         self.extension_label.setFont(self.font_(point_size=10))
@@ -109,18 +111,33 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.file_select_button.setIconSize(QtCore.QSize(70, 70))
         self.file_select_button.setObjectName("file_select_button")
         self.verticalLayout.addWidget(self.File_frames)
+        if recent_class is not None:
+            self.extension_select.setCurrentText(recent_class)
     
     def del_buttons(self):
         """Deletes all the buttons you done"""
         while self.verticalLayout.count() > 0:
             self.verticalLayout.itemAt(0).widget().setParent(None)
 
+    def del_current_buttons(self):
+        """deletes the current button"""
+        pass
+
+    def restore_past(self):
+        run_recent = setting.Recent()
+        self.del_buttons()
+        for i in run_recent.get_filepath():
+            self.addButtonFrame(i[0], i[1])
+
     def organize_(self):
+        source = self.OptionSelection.children()[3].text().split('\n')[1]
         config = []
         for i in range(self.verticalLayout.count()):
             file = [self.verticalLayout.itemAt(i).widget().children()[1].text(), self.verticalLayout.itemAt(i).widget().children()[2].currentText()]
             config.append(file)
-        print(config)
+        files = os.listdir(source.strip())
+        for i in files:
+            print(i)
 
 
     def optionFrameAnimation(self):
@@ -370,7 +387,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.Refresh_btn.setIcon(icon4)
         self.Refresh_btn.setIconSize(QtCore.QSize(40, 40))
         self.Refresh_btn.setObjectName("Refresh_btn")
-        self.Refresh_btn.clicked.connect(self.del_buttons)
+        self.Refresh_btn.clicked.connect(self.restore_past)
 
 
         self.OptionFrame = QtWidgets.QFrame(self.centralwidget)
