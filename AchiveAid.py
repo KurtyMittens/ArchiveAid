@@ -40,6 +40,19 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         if len(self.source_file) != 0:
             self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {self.source_file}")
 
+    def if_repeat_ext(self, extensions):
+        for i in range(len(extensions)):
+            for j in range(len(extensions)):
+                if j == i:
+                    continue
+                if extensions[i] == extensions[j]:
+                    return True
+        return False
+    
+    def what_repeat_ext(self, extensions):
+        return list(set([i for i in extensions if extensions.count(i) > 1]))
+            
+            
     def addButtonFrame(self, filename, recent_class=None):
         """Add Files in the form of a button in the scroll area"""
         self.File_frames = QtWidgets.QFrame(self.scrollAreaWidgetContents)
@@ -131,14 +144,32 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
     def organize_(self):
         source = self.OptionSelection.children()[3].text().split('\n')[1]
-        config = []
+        filepath = []
+        file_ext = []
         for i in range(self.verticalLayout.count()):
-            file = [self.verticalLayout.itemAt(i).widget().children()[1].text(), self.verticalLayout.itemAt(i).widget().children()[2].currentText()]
-            config.append(file)
-        files = os.listdir(source.strip())
-        for i in files:
-            print(i)
+            file = self.verticalLayout.itemAt(i).widget().children()[1].text()
+            extension = self.verticalLayout.itemAt(i).widget().children()[2].currentText()
+            filepath.append(file)
+            file_ext.append(extension)
+        if self.if_repeat_ext(file_ext):
+            self.display_criticalMsg(mode='rep', detail=self.what_repeat_ext(file_ext))
+        self.organize_files(src=source, dic=dict(zip(file_ext,filepath)))
 
+    def organize_files(self, src, dic):
+        files = os.listdir(src.strip())
+        for i in files:
+            print(os.path.splitext(i))
+        print(dic)
+
+    def display_criticalMsg(self, mode='def', detail=""):
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Critical)
+        msg.setWindowTitle("Something is Wrong!")
+        msg.setText("err0rep: REPEATED CATEGORIZED EXTENSIONS")
+        msg.setInformativeText("Repetition of Categorized File-Extensions are not allowed! it may break or lose your files")
+        msg.setDetailedText(f"{detail} categories are repeated multiple times...")
+        retval = msg.exec_()
+        
 
     def optionFrameAnimation(self):
         """Force the animation of the Option Frame"""
