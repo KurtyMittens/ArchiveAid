@@ -153,13 +153,25 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
             file_ext.append(extension)
         if self.if_repeat_ext(file_ext):
             self.display_criticalMsg(mode='rep', detail=self.what_repeat_ext(file_ext))
-        self.organize_files(src=source, dic=dict(zip(file_ext,filepath)))
+        else:
+            self.organize_files(src=source, dic=dict(zip(file_ext,filepath)))
 
     def organize_files(self, src, dic):
-        files = os.listdir(src.strip())
-        for i in files:
-            print(os.path.splitext(i))
-        print(dic)
+            organize_guide = setting.Files_extensions()
+            files = os.listdir(src.strip())
+            for i in files:
+                try:
+                    cat = organize_guide.find_support(os.path.splitext(i)[1])
+                    shutil.move(f"{src.strip()}/{i}", dic[cat])
+                    print(i,'DONE')
+                except KeyError:
+                    print(i,'WHERE')
+                    shutil.move(f"{src.strip()}/{i}", "/home/kurtymittens/TEST")
+                except:
+                    continue
+                 
+
+
 
     def display_criticalMsg(self, mode='def', detail=""):
         msg = QtWidgets.QMessageBox()
