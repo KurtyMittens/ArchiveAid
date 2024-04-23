@@ -23,12 +23,12 @@ class Files_extensions:
                 "Disc":['.bin', '.dmg', '.iso', '.toast', '.vcd'],
                 "Data/Database":['.csv', '.dat', '.db', '.dbf', '.log', '.mdb', '.sav', '.sql', '.tar', '.xml'],
                 "Email":['.email', '.eml', '.emlx', '.msg', '.oft', 'ost', '.pst', '.vcf'],
-                "Executable":['.apk', '.bat', '.bin', '.cgi', '.pl', '.com', '.exe', '.gadget', '.jar', '.msi', '.py', '.wsf'],
+                "Executable":['.apk', '.bat', '.bin', '.cgi', '.pl', '.com', '.exe', '.gadget', '.jar', '.msi', '.wsf'],
                 "Fonts/file":['.fnt', '.fon', '.otf', '.ttf'],
                 "Images":['.ai', '.bmp', '.gif', '.ico', '.jpeg', '.jpg', '.png', '.ps', '.psd', '.svg', '.tif', '.tiff', '.webp'],
-                "InternetFiles":['.asp', '.aspx', '.cer', '.cfm', '.cgi', '.pl', '.css', '.htm', '.html', '.js', '.jsp', '.part', '.php', '.py', '.rss', '.xhtml'],
+                "InternetFiles":['.asp', '.aspx', '.cer', '.cfm', '.css', '.htm', '.html', '.js', '.jsp', '.part', '.php', '.rss', '.xhtml'],
                 "Presentation":['.key', '.odp', '.pps', '.ppt', '.pptx'],
-                "Programming":['.c', '.cgi', '.pl', '.class', '.cpp', '.cs', '.h', '.java', '.php', '.py', '.sh', '.swift', '.vb', 'ipnyb'],
+                "Programming":['.c', '.class', '.cpp', '.cs', '.h', '.java', '.py', '.sh', '.swift', '.vb', 'ipnyb'],
                 "Spreadsheets":['.ods', '.xls' '.xlsm', 'xlsx'],
                 "System":['.bak','.cab', '.cfg', '.cpl', '.cur', '.dll', '.dmp', '.drv', '.icns', '.ico', '.ini', '.lnk', '.msi', '.sys', '.tmp'],
                 "Video":['.3g2', '.3gp', '.avi', '.flv', '.h264', '.m4v', '.mkv', '.mov', '.mp4', '.mpg', '.mpeg', '.rm', '.swf', '.vob', '.webm', '.wmv'],
@@ -38,16 +38,20 @@ class Files_extensions:
         def get_class_ext(self):
              return self.file_ext.keys()
         
-        def check_support(self, ext):
-             return ext in self.file_ext.keys()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        def find_support(self, file_ext):
+            for key, values in self.file_ext.items():
+                 if file_ext in values:
+                      return key
+            return 1
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
         
         
              
         
 if __name__ == '__main__':
-     run = Recent()
-     print(run.get_filepath())
-     print(run.get_sourcepath())
+     # run = Recent()
+     # print(run.get_filepath())
+     # print(run.get_sourcepath())
      file = Files_extensions()
-     print(file.check_support("Audio"))
+     print(file.find_support(".py"))
 
