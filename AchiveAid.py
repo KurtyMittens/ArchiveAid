@@ -16,6 +16,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         for i in run_recent.get_filepath():
             self.addButtonFrame(i[0], i[1])
         self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {run_recent.get_sourcepath()[0]}")
+        self.file_trashselection.setText(f"CURRENT TRASH FILE: \n {run_recent.get_trashpath()[0]}")
         self.historychange.setText(f"HISTORY CACHE: \n {os.stat('histcache').st_size} bytes")
 
     def font_(self, point_size=None, weight=75, bold = True, family="JetBrainsMono NF SemiBold"):
@@ -40,6 +41,12 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         if len(self.source_file) != 0:
             self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {self.source_file}")
 
+    def get_trash(self):
+        """get the trash directory you want to organize"""
+        self.trash_file = QtWidgets.QFileDialog.getExistingDirectory()
+        if len(self.trash_file) != 0:
+            self.file_trashselection.setText(f"CURRENT TRASH FILE: \n {self.trash_file}")
+
     def if_repeat_ext(self, extensions):
         for i in range(len(extensions)):
             for j in range(len(extensions)):
@@ -51,7 +58,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
     
     def what_repeat_ext(self, extensions):
         return list(set([i for i in extensions if extensions.count(i) > 1]))
-            
             
     def addButtonFrame(self, filename, recent_class=None):
         """Add Files in the form of a button in the scroll area"""
@@ -144,6 +150,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
     def organize_(self):
         source = self.OptionSelection.children()[3].text().split('\n')[1]
+        trash = self.OptionSelection.children()[2].text().split('\n')[1]
         filepath = []
         file_ext = []
         for i in range(self.verticalLayout.count()):
@@ -154,9 +161,9 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         if self.if_repeat_ext(file_ext):
             self.display_criticalMsg(mode='rep', detail=self.what_repeat_ext(file_ext))
         else:
-            self.organize_files(src=source, dic=dict(zip(file_ext,filepath)))
+            self.organize_files(src=source, trash=trash,dic=dict(zip(file_ext,filepath)))
 
-    def organize_files(self, src, dic):
+    def organize_files(self, src,trash, dic):
             organize_guide = setting.Files_extensions()
             files = os.listdir(src.strip())
             for i in files:
@@ -166,12 +173,10 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                     print(i,'DONE')
                 except KeyError:
                     print(i,'WHERE')
-                    shutil.move(f"{src.strip()}/{i}", "/home/kurtymittens/TEST")
+                    shutil.move(f"{src.strip()}/{i}", f"{trash.strip()}/{i}")
                 except:
                     continue
                  
-
-
 
     def display_criticalMsg(self, mode='def', detail=""):
         msg = QtWidgets.QMessageBox()
@@ -489,14 +494,15 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.pickundoselaercion = QtWidgets.QPushButton(self.OptionSelection)
         self.pickundoselaercion.setGeometry(QtCore.QRect(10, 170, 210, 70))
 
-        self.undo_last_button = QtWidgets.QPushButton(self.OptionSelection)
-        self.undo_last_button.setGeometry(QtCore.QRect(10, 90, 210, 70))
+        self.file_trashselection = QtWidgets.QPushButton(self.OptionSelection)
+        self.file_trashselection.setGeometry(QtCore.QRect(10, 90, 210, 70))
+        self.file_trashselection.clicked.connect(self.get_trash)
 
         self.file_sourceselection = QtWidgets.QPushButton(self.OptionSelection)
         self.file_sourceselection.setGeometry(QtCore.QRect(10, 10, 210, 70))
         self.file_sourceselection.clicked.connect(self.get_source)
 
-        for button in [self.historychange, self.pickundoselaercion, self.undo_last_button, self.file_sourceselection]:
+        for button in [self.historychange, self.pickundoselaercion, self.file_trashselection, self.file_sourceselection]:
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
             sizePolicy.setHorizontalStretch(0)
             sizePolicy.setVerticalStretch(0)
@@ -531,7 +537,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.OrganizeBtn.setText(_translate("ArchiveAid", "ORGANIZE"))
         self.option_label.setText(_translate("ArchiveAid", "OPTIONS"))
         self.pickundoselaercion.setText(_translate("ArchiveAid", "UNDO SELECTED \n ORGANIZATION"))
-        self.undo_last_button.setText(_translate("ArchiveAid", "UNDO LAST \n ORGANIZATION"))
 
 
 if __name__ == "__main__":

@@ -10,10 +10,13 @@ class Recent:
                         self.filesave.append(file.split("-"))
 
     def get_filepath(self):
-         return self.filesave[1:]
+         return self.filesave[2:]
     
     def get_sourcepath(self):
          return self.filesave[0]
+    
+    def get_trashpath(self):
+         return self.filesave[1]
     
 class Files_extensions:
         def __init__(self) -> None:
@@ -49,9 +52,10 @@ class Files_extensions:
              
         
 if __name__ == '__main__':
-     # run = Recent()
-     # print(run.get_filepath())
-     # print(run.get_sourcepath())
-     file = Files_extensions()
-     print(file.find_support(".py"))
+     run = Recent()
+     print(run.get_filepath())
+     print(run.get_sourcepath())
+     print(run.get_trashpath())
+     # file = Files_extensions()
+     # print(file.find_support(".py"))
 
