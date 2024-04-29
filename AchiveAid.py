@@ -1,6 +1,9 @@
+import os
+import shutil
+import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import setting
-import sys, os, shutil
+
 
 class Ui_ArchiveAid(QtWidgets.QMainWindow):
     def __init__(self):
@@ -16,15 +19,13 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         for i in run_recent.get_filepath():
             self.addButtonFrame(i[0], i[1])
         self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {run_recent.get_sourcepath()[0]}")
-        self.file_trashselection.setText(f"CURRENT TRASH FILE: \n {run_recent.get_trashpath()[0]}")
-        self.historychange.setText(f"HISTORY CACHE: \n {os.stat('histcache').st_size} bytes")
 
-    def font_(self, point_size=None, weight=75, bold = True, family="JetBrainsMono NF SemiBold"):
+    def font_(self, point_size=None, weight=75, bold=True, family="JetBrainsMono NF SemiBold"):
         """Returns the font, you can change it your own desire"""
         font = QtGui.QFont()
         font.setFamily(family)
         if point_size is not None:
-          font.setPointSize(point_size)
+            font.setPointSize(point_size)
         font.setBold(bold)
         font.setWeight(weight)
         return font
@@ -33,7 +34,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         """gets the directory to put the organized files"""
         self.filename = QtWidgets.QFileDialog.getExistingDirectory()
         if len(self.filename) != 0:
-          self.addButtonFrame(self.filename)
+            self.addButtonFrame(self.filename)
 
     def get_source(self):
         """get the source directory you want to organize"""
@@ -55,10 +56,10 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                 if extensions[i] == extensions[j]:
                     return True
         return False
-    
+
     def what_repeat_ext(self, extensions):
         return list(set([i for i in extensions if extensions.count(i) > 1]))
-            
+
     def addButtonFrame(self, filename, recent_class=None):
         """Add Files in the form of a button in the scroll area"""
         self.File_frames = QtWidgets.QFrame(self.scrollAreaWidgetContents)
@@ -94,7 +95,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                           "")
         self.Filepath_label.setObjectName("Filepath_label")
 
-
         self.extension_select = QtWidgets.QComboBox(self.File_frames)
         self.extension_select.setGeometry(QtCore.QRect(280, 40, 90, 21))
         self.extension_select.setStyleSheet("background-color: rgb(255, 255, 255);\n"
@@ -114,15 +114,15 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.file_select_button.setGeometry(QtCore.QRect(10, 10, 81, 71))
         self.file_select_button.setFont(self.font_(point_size=14))
         self.file_select_button.setStyleSheet("QPushButton{\n"
-                                     "    background-color:rgb(102, 111, 128);\n"
-                                     "    border:2px;\n"
-                                     "    border-radius:25px;\n"
-                                     "}\n"
-                                     "\n"
-                                     "QPushButton:pressed{\n"
-                                     "    background-color: rgb(251, 109, 108);\n"
-                                     "    color:rgb(102, 111, 128)\n"
-                                     "}")
+                                              "    background-color:rgb(102, 111, 128);\n"
+                                              "    border:2px;\n"
+                                              "    border-radius:25px;\n"
+                                              "}\n"
+                                              "\n"
+                                              "QPushButton:pressed{\n"
+                                              "    background-color: rgb(251, 109, 108);\n"
+                                              "    color:rgb(102, 111, 128)\n"
+                                              "}")
 
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("dev/../assets/file.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -132,9 +132,9 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.verticalLayout.addWidget(self.File_frames)
         if recent_class is not None:
             self.extension_select.setCurrentText(recent_class)
-    
+
     def del_buttons(self):
-        """Deletes all the buttons you done"""
+        """Deletes all the buttons you have done"""
         while self.verticalLayout.count() > 0:
             self.verticalLayout.itemAt(0).widget().setParent(None)
 
@@ -150,43 +150,56 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
     def organize_(self):
         source = self.OptionSelection.children()[3].text().split('\n')[1]
-        trash = self.OptionSelection.children()[2].text().split('\n')[1]
         filepath = []
+        file_cat = []
+        file_path = []
         file_ext = []
         for i in range(self.verticalLayout.count()):
             file = self.verticalLayout.itemAt(i).widget().children()[1].text()
             extension = self.verticalLayout.itemAt(i).widget().children()[2].currentText()
-            filepath.append(file)
-            file_ext.append(extension)
-        if self.if_repeat_ext(file_ext):
-            self.display_criticalMsg(mode='rep', detail=self.what_repeat_ext(file_ext))
+            if '.' in extension:
+                file_path.append(file)
+                file_ext.append(extension)
+            else:
+                filepath.append(file)
+                file_cat.append(extension)
+        if self.if_repeat_ext(file_cat):
+            self.display_criticalMsg(mode='rep', detail=self.what_repeat_ext(file_cat))
         else:
-            self.organize_files(src=source, trash=trash,dic=dict(zip(file_ext,filepath)))
+            self.organize_files(src=source, dic_cat=dict(zip(file_cat, filepath)),
+                                dic_ext=dict(zip(file_ext, file_path)))
 
-    def organize_files(self, src,trash, dic):
-            organize_guide = setting.Files_extensions()
-            files = os.listdir(src.strip())
-            for i in files:
+    def organize_files(self, src, dic_cat, dic_ext):
+        organize_guide = setting.Files_extensions()
+        files = os.listdir(src.strip())
+        done = 0
+        for i in files:
+            try:
+                cat = organize_guide.find_support(os.path.splitext(i)[1])
+                shutil.move(f"{src.strip()}/{i}", dic_cat[cat])
+                done += 1
+            except KeyError:
                 try:
-                    cat = organize_guide.find_support(os.path.splitext(i)[1])
-                    shutil.move(f"{src.strip()}/{i}", dic[cat])
-                    print(i,'DONE')
+                    cat = os.path.splitext(i)[1]
+                    shutil.move(f"{src.strip()}/{i}", dic_ext[cat])
+                    done += 1
                 except KeyError:
-                    print(i,'WHERE')
-                    shutil.move(f"{src.strip()}/{i}", f"{trash.strip()}/{i}")
-                except:
-                    continue
-                 
+                    shutil.move(f"{src.strip()}/{i}", f"{src.strip()}/{i}")
+            except FileNotFoundError:
+                 self.display_criticalMsg(detail="LOLOLO")
+        print(done)
+
+
 
     def display_criticalMsg(self, mode='def', detail=""):
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
         msg.setWindowTitle("Something is Wrong!")
         msg.setText("err0rep: REPEATED CATEGORIZED EXTENSIONS")
-        msg.setInformativeText("Repetition of Categorized File-Extensions are not allowed! it may break or lose your files")
+        msg.setInformativeText(
+            "Repetition of Categorized File-Extensions are not allowed! it may break or lose your files")
         msg.setDetailedText(f"{detail} categories are repeated multiple times...")
         retval = msg.exec_()
-        
 
     def optionFrameAnimation(self):
         """Force the animation of the Option Frame"""
@@ -194,14 +207,16 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.animate = QtCore.QPropertyAnimation(self.OptionFrame, b'geometry')
         if self.OptionFrame.x() == hidden:
             self.animate.setStartValue(
-                QtCore.QRect(self.OptionFrame.x(), self.OptionFrame.y(), self.OptionFrame.width(), self.OptionFrame.height()))
+                QtCore.QRect(self.OptionFrame.x(), self.OptionFrame.y(), self.OptionFrame.width(),
+                             self.OptionFrame.height()))
             self.animate.setEndValue(
                 QtCore.QRect(0, self.OptionFrame.y(), self.OptionFrame.width(), self.OptionFrame.height()))
             self.animate.start()
 
         else:
             self.animate.setStartValue(
-                QtCore.QRect(self.OptionFrame.x(), self.OptionFrame.y(), self.OptionFrame.width(), self.OptionFrame.height()))
+                QtCore.QRect(self.OptionFrame.x(), self.OptionFrame.y(), self.OptionFrame.width(),
+                             self.OptionFrame.height()))
             self.animate.setEndValue(
                 QtCore.QRect(hidden, self.OptionFrame.y(), self.OptionFrame.width(), self.OptionFrame.height()))
             self.animate.start()
@@ -224,10 +239,8 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         ArchiveAid.setStyleSheet("background-color: rgb(251, 109, 108);")
         ArchiveAid.setUnifiedTitleAndToolBarOnMac(True)
 
-
         self.centralwidget = QtWidgets.QWidget(ArchiveAid)
         self.centralwidget.setObjectName("centralwidget")
-
 
         self.MenuButton = QtWidgets.QPushButton(self.centralwidget)
         self.MenuButton.setGeometry(QtCore.QRect(10, 10, 51, 50))
@@ -242,15 +255,13 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                       "    border-radius: 15px;\n"
                                       "}")
         icon1 = QtGui.QIcon()
-        
+
         icon1.addPixmap(QtGui.QPixmap("dev/../assets/menu.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.MenuButton.setIcon(icon1)
         self.MenuButton.setIconSize(QtCore.QSize(50, 50))
         self.MenuButton.setCheckable(False)
         self.MenuButton.setObjectName("MenuButton")
         self.MenuButton.clicked.connect(self.optionFrameAnimation)
-        
-
 
         self.TitleFrame = QtWidgets.QFrame(self.centralwidget)
         self.TitleFrame.setGeometry(QtCore.QRect(70, 10, 371, 55))
@@ -264,7 +275,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.TitleFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.TitleFrame.setObjectName("TitleFrame")
 
-
         self.title_label = QtWidgets.QLabel(self.TitleFrame)
         self.title_label.setGeometry(QtCore.QRect(90, 7, 251, 41))
         self.title_label.setFont(self.font_(point_size=28))
@@ -275,7 +285,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                        "}")
         self.title_label.setObjectName("title_label")
 
-
         self.Logo_pixmap = QtWidgets.QLabel(self.TitleFrame)
         self.logo = QtGui.QPixmap("assets/logo.png")
         self.Logo_pixmap.setGeometry(QtCore.QRect(20, 7, 51, 41))
@@ -283,7 +292,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.Logo_pixmap.setPixmap(self.logo)
         self.Logo_pixmap.setScaledContents(True)
         self.Logo_pixmap.setObjectName("Logo_pixmap")
-
 
         self.FileFrame = QtWidgets.QFrame(self.centralwidget)
         self.FileFrame.setGeometry(QtCore.QRect(10, 70, 431, 521))
@@ -296,7 +304,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.FileFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.FileFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.FileFrame.setObjectName("FileFrame")
-
 
         self.scrollArea = QtWidgets.QScrollArea(self.FileFrame)
         self.scrollArea.setGeometry(QtCore.QRect(5, 20, 411, 431))
@@ -339,25 +346,21 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                       "    }\n"
                                       "\n"
                                       "")
-        
+
         self.scrollArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
         self.scrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setAlignment(QtCore.Qt.AlignCenter)
         self.scrollArea.setObjectName("scrollArea")
 
-
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 401, 431))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
 
-
         self.verticalLayout = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout.setObjectName("verticalLayout")
 
-
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-
 
         self.OrganizeBtn = QtWidgets.QPushButton(self.FileFrame)
         self.OrganizeBtn.setGeometry(QtCore.QRect(150, 460, 131, 51))
@@ -380,7 +383,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                        "}")
         self.OrganizeBtn.setObjectName("OrganizeBtn")
         self.OrganizeBtn.clicked.connect(self.organize_)
-
 
         self.add_btn = QtWidgets.QPushButton(self.FileFrame)
         self.add_btn.setGeometry(QtCore.QRect(90, 460, 51, 51))
@@ -409,7 +411,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.add_btn.setObjectName("add_btn")
         self.add_btn.clicked.connect(self.get_file)
 
-        
         self.Refresh_btn = QtWidgets.QPushButton(self.FileFrame)
         self.Refresh_btn.setGeometry(QtCore.QRect(290, 460, 51, 51))
         self.Refresh_btn.setFont(self.font_(point_size=14))
@@ -437,14 +438,11 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.Refresh_btn.setObjectName("Refresh_btn")
         self.Refresh_btn.clicked.connect(self.restore_past)
 
-
         self.OptionFrame = QtWidgets.QFrame(self.centralwidget)
         self.OptionFrame.setGeometry(QtCore.QRect(-250, 0, 251, 601))
         self.OptionFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.OptionFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.OptionFrame.setObjectName("OptionFrame")
-
-
 
         self.back_button = QtWidgets.QPushButton(self.OptionFrame)
         self.back_button.setGeometry(QtCore.QRect(190, 10, 51, 50))
@@ -467,13 +465,11 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.back_button.setObjectName("back_button")
         self.back_button.clicked.connect(self.optionFrameAnimation)
 
-
         self.option_label = QtWidgets.QLabel(self.OptionFrame)
         self.option_label.setGeometry(QtCore.QRect(20, 15, 161, 41))
         self.option_label.setFont(self.font_(point_size=28))
         self.option_label.setStyleSheet("color: rgb(255, 255, 255);\n")
         self.option_label.setObjectName("option_label")
-
 
         self.OptionSelection = QtWidgets.QFrame(self.OptionFrame)
         self.OptionSelection.setGeometry(QtCore.QRect(10, 70, 231, 521))
@@ -486,7 +482,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.OptionSelection.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.OptionSelection.setFrameShadow(QtWidgets.QFrame.Raised)
         self.OptionSelection.setObjectName("OptionSelection")
-
 
         self.historychange = QtWidgets.QPushButton(self.OptionSelection)
         self.historychange.setGeometry(QtCore.QRect(10, 250, 210, 70))
@@ -502,7 +497,8 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.file_sourceselection.setGeometry(QtCore.QRect(10, 10, 210, 70))
         self.file_sourceselection.clicked.connect(self.get_source)
 
-        for button in [self.historychange, self.pickundoselaercion, self.file_trashselection, self.file_sourceselection]:
+        for button in [self.historychange, self.pickundoselaercion, self.file_trashselection,
+                       self.file_sourceselection]:
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
             sizePolicy.setHorizontalStretch(0)
             sizePolicy.setVerticalStretch(0)
@@ -511,18 +507,18 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
             button.setMinimumSize(QtCore.QSize(210, 70))
             button.setFont(self.font_())
             button.setStyleSheet("QPushButton{\n"
-                                            "    background-color: rgb(195, 200, 211);\n"
-                                            "    border:2 px;\n"
-                                            "    border-radius:25px;\n"
-                                            "    color:rgb(0, 0, 0);\n"
-                                            "}\n"
-                                            "QPushButton::hover{\n"
-                                            "    background-color: rgb(251, 109, 108);\n"
-                                            "    border:2 px;\n"
-                                            "    border-radius:25px;\n"
-                                            "    color:rgb(0, 0, 0);\n"
-                                            "}")
-        
+                                 "    background-color: rgb(195, 200, 211);\n"
+                                 "    border:2 px;\n"
+                                 "    border-radius:25px;\n"
+                                 "    color:rgb(0, 0, 0);\n"
+                                 "}\n"
+                                 "QPushButton::hover{\n"
+                                 "    background-color: rgb(251, 109, 108);\n"
+                                 "    border:2 px;\n"
+                                 "    border-radius:25px;\n"
+                                 "    color:rgb(0, 0, 0);\n"
+                                 "}")
+
         self.file_sourceselection.setObjectName("file_sourceselection")
         ArchiveAid.setCentralWidget(self.centralwidget)
 
