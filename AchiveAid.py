@@ -20,6 +20,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
             self.addButtonFrame(i[0], i[1])
         self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {run_recent.get_sourcepath()[0]}")
 
+
     def font_(self, point_size=None, weight=75, bold=True, family="JetBrainsMono NF SemiBold"):
         """Returns the font, you can change it your own desire"""
         font = QtGui.QFont()
@@ -46,7 +47,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         """get the trash directory you want to organize"""
         self.trash_file = QtWidgets.QFileDialog.getExistingDirectory()
         if len(self.trash_file) != 0:
-            self.file_trashselection.setText(f"CURRENT TRASH FILE: \n {self.trash_file}")
+            self.option_preferences.setText(f"CURRENT TRASH FILE: \n {self.trash_file}")
 
     def if_repeat_ext(self, extensions):
         for i in range(len(extensions)):
@@ -190,7 +191,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         print(done)
 
 
-
     def display_criticalMsg(self, mode='def', detail=""):
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
@@ -238,6 +238,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         ArchiveAid.setWindowIcon(icon)
         ArchiveAid.setStyleSheet("background-color: rgb(251, 109, 108);")
         ArchiveAid.setUnifiedTitleAndToolBarOnMac(True)
+        ArchiveAid.setWindowTitle('ArchiveAid')
 
         self.centralwidget = QtWidgets.QWidget(ArchiveAid)
         self.centralwidget.setObjectName("centralwidget")
@@ -284,6 +285,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                        "    color: rgb(255, 255, 255);\n"
                                        "}")
         self.title_label.setObjectName("title_label")
+        self.title_label.setText("ARCHIVE/AID")
 
         self.Logo_pixmap = QtWidgets.QLabel(self.TitleFrame)
         self.logo = QtGui.QPixmap("assets/logo.png")
@@ -383,6 +385,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                        "}")
         self.OrganizeBtn.setObjectName("OrganizeBtn")
         self.OrganizeBtn.clicked.connect(self.organize_)
+        self.OrganizeBtn.setText('ORGANIZE')
 
         self.add_btn = QtWidgets.QPushButton(self.FileFrame)
         self.add_btn.setGeometry(QtCore.QRect(90, 460, 51, 51))
@@ -432,7 +435,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                                        "}")
         self.Refresh_btn.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("dev/../assets/reset.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap("assets/reset.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.Refresh_btn.setIcon(icon4)
         self.Refresh_btn.setIconSize(QtCore.QSize(40, 40))
         self.Refresh_btn.setObjectName("Refresh_btn")
@@ -470,6 +473,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.option_label.setFont(self.font_(point_size=28))
         self.option_label.setStyleSheet("color: rgb(255, 255, 255);\n")
         self.option_label.setObjectName("option_label")
+        self.option_label.setText("OPTIONS")
 
         self.OptionSelection = QtWidgets.QFrame(self.OptionFrame)
         self.OptionSelection.setGeometry(QtCore.QRect(10, 70, 231, 521))
@@ -483,21 +487,25 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.OptionSelection.setFrameShadow(QtWidgets.QFrame.Raised)
         self.OptionSelection.setObjectName("OptionSelection")
 
-        self.historychange = QtWidgets.QPushButton(self.OptionSelection)
-        self.historychange.setGeometry(QtCore.QRect(10, 250, 210, 70))
+        self.about_button = QtWidgets.QPushButton(self.OptionSelection)
+        self.about_button.setGeometry(QtCore.QRect(10, 250, 210, 70))
+        self.about_button.setText("ABOUT")
 
-        self.pickundoselaercion = QtWidgets.QPushButton(self.OptionSelection)
-        self.pickundoselaercion.setGeometry(QtCore.QRect(10, 170, 210, 70))
+        self.reset_lastConfig = QtWidgets.QPushButton(self.OptionSelection)
+        self.reset_lastConfig.setGeometry(QtCore.QRect(10, 170, 210, 70))
+        self.reset_lastConfig.setText("RESET TO LAST CONFIGURATION")
 
-        self.file_trashselection = QtWidgets.QPushButton(self.OptionSelection)
-        self.file_trashselection.setGeometry(QtCore.QRect(10, 90, 210, 70))
-        self.file_trashselection.clicked.connect(self.get_trash)
+
+        self.option_preferences = QtWidgets.QPushButton(self.OptionSelection)
+        self.option_preferences.setGeometry(QtCore.QRect(10, 90, 210, 70))
+        self.option_preferences.clicked.connect(self.get_trash)
+        self.option_preferences.setText("PREFERENCES")
 
         self.file_sourceselection = QtWidgets.QPushButton(self.OptionSelection)
         self.file_sourceselection.setGeometry(QtCore.QRect(10, 10, 210, 70))
         self.file_sourceselection.clicked.connect(self.get_source)
 
-        for button in [self.historychange, self.pickundoselaercion, self.file_trashselection,
+        for button in [self.about_button, self.reset_lastConfig, self.option_preferences,
                        self.file_sourceselection]:
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
             sizePolicy.setHorizontalStretch(0)
@@ -521,19 +529,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
 
         self.file_sourceselection.setObjectName("file_sourceselection")
         ArchiveAid.setCentralWidget(self.centralwidget)
-
-        self.retranslateUi(ArchiveAid)
         QtCore.QMetaObject.connectSlotsByName(ArchiveAid)
-
-    def retranslateUi(self, ArchiveAid):
-        _translate = QtCore.QCoreApplication.translate
-        ArchiveAid.setWindowTitle(_translate("ArchiveAid", "ArchiveAid"))
-        self.title_label.setText(_translate("ArchiveAid", "ARCHIVE/AID"))
-
-        self.OrganizeBtn.setText(_translate("ArchiveAid", "ORGANIZE"))
-        self.option_label.setText(_translate("ArchiveAid", "OPTIONS"))
-        self.pickundoselaercion.setText(_translate("ArchiveAid", "UNDO SELECTED \n ORGANIZATION"))
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
