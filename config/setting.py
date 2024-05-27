@@ -54,7 +54,6 @@ class Files_extensions:
                 return key
         return 1
 
-
 if __name__ == '__main__':
     run = Recent()
     print(run.get_filepath())
