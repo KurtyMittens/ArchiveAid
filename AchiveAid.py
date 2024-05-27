@@ -43,12 +43,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         if len(self.source_file) != 0:
             self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {self.source_file}")
 
-    def get_trash(self):
-        """get the trash directory you want to organize"""
-        self.trash_file = QtWidgets.QFileDialog.getExistingDirectory()
-        if len(self.trash_file) != 0:
-            self.option_preferences.setText(f"CURRENT TRASH FILE: \n {self.trash_file}")
-
     def if_repeat_ext(self, extensions):
         for i in range(len(extensions)):
             for j in range(len(extensions)):
@@ -491,21 +485,20 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.about_button.setGeometry(QtCore.QRect(10, 250, 210, 70))
         self.about_button.setText("ABOUT")
 
-        self.reset_lastConfig = QtWidgets.QPushButton(self.OptionSelection)
-        self.reset_lastConfig.setGeometry(QtCore.QRect(10, 170, 210, 70))
-        self.reset_lastConfig.setText("RESET TO LAST CONFIGURATION")
+        self.issue_report = QtWidgets.QPushButton(self.OptionSelection)
+        self.issue_report.setGeometry(QtCore.QRect(10, 170, 210, 70))
+        self.issue_report.setText("REPORT AN ISSUE")
 
 
-        self.option_preferences = QtWidgets.QPushButton(self.OptionSelection)
-        self.option_preferences.setGeometry(QtCore.QRect(10, 90, 210, 70))
-        self.option_preferences.clicked.connect(self.get_trash)
-        self.option_preferences.setText("PREFERENCES")
+        self.check_history_logs = QtWidgets.QPushButton(self.OptionSelection)
+        self.check_history_logs.setGeometry(QtCore.QRect(10, 90, 210, 70))
+        self.check_history_logs.setText("CHECK HISTORY LOGS")
 
         self.file_sourceselection = QtWidgets.QPushButton(self.OptionSelection)
         self.file_sourceselection.setGeometry(QtCore.QRect(10, 10, 210, 70))
         self.file_sourceselection.clicked.connect(self.get_source)
 
-        for button in [self.about_button, self.reset_lastConfig, self.option_preferences,
+        for button in [self.about_button, self.issue_report, self.check_history_logs,
                        self.file_sourceselection]:
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
             sizePolicy.setHorizontalStretch(0)
