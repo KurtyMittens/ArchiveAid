@@ -5,6 +5,148 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from config import setting
 
 
+class FileButton(QtWidgets.QFrame):
+    def __init__(self, filename, frame):
+        super().__init__(frame)
+        items = setting.Files_extensions()
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
+        self.setSizePolicy(sizePolicy)
+        self.setMinimumSize(QtCore.QSize(380, 90))
+        self.setStyleSheet("background-color: rgb(195, 200, 211);\n"
+                                           "border:2px;\n"
+                                           "border-radius:25px;")
+        self.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.setObjectName("File_frames")
+
+        self.Filename_label = QtWidgets.QLabel(self)
+        self.Filename_label.setGeometry(QtCore.QRect(100, 15, 151, 41))
+        self.Filename_label.setFont(self.font_(point_size=12))
+        self.Filename_label.setText(filename.split("/")[-1:][0])
+        self.Filename_label.setStyleSheet("background-color: rgb(195, 200, 211);\n"
+                                              "color: rgb(0, 0, 0);\n"
+                                              "")
+        self.Filename_label.setObjectName("Filename_label")
+
+        self.Filepath_label = QtWidgets.QLabel(self)
+        self.Filepath_label.setGeometry(QtCore.QRect(100, 45, 160, 30))
+        self.Filepath_label.setFont(self.font_(point_size=8))
+        self.Filepath_label.setText(filename)
+        self.Filepath_label.setStyleSheet("background-color: rgb(195, 200, 211);\n"
+                                              "color: rgb(0, 0, 0);\n"
+                                              "")
+        self.Filepath_label.setObjectName("Filepath_label")
+
+        self.extension_select = QtWidgets.QComboBox(self)
+        self.extension_select.setGeometry(QtCore.QRect(280, 40, 90, 21))
+        self.extension_select.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+                                                "color:rgb(0, 0, 0);\n"
+                                                "")
+        self.extension_select.setEditable(True)
+        self.extension_select.setObjectName("extension_select")
+        self.extension_select.addItems(items.get_class_ext())
+        self.extension_label = QtWidgets.QLabel(self)
+        self.extension_label.setGeometry(QtCore.QRect(280, 20, 71, 21))
+        self.extension_label.setFont(self.font_(point_size=10))
+        self.extension_label.setText('Extensions')
+        self.extension_label.setStyleSheet("color: rgb(0, 0, 0);")
+        self.extension_label.setObjectName("extension_label")
+
+        self.editFrames = QtWidgets.QFrame(self)
+        items = setting.Files_extensions()
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.editFrames.sizePolicy().hasHeightForWidth())
+        self.editFrames.setSizePolicy(sizePolicy)
+        self.editFrames.setGeometry(QtCore.QRect(10, 10, 81, 71))
+        self.editFrames.setStyleSheet("background-color: rgb(102, 111, 128);\n"
+                                          "border:2px;\n"
+                                          "border-radius:25px;")
+        self.editFrames.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.editFrames.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.editFrames.setObjectName("editFrames")
+        self.editFrames.hide()
+
+        self.file_button = QtWidgets.QPushButton(self)
+        self.file_button.setGeometry(QtCore.QRect(10, 10, 81, 71))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("assets/file.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.file_button.setIcon(icon)
+        self.file_button.clicked.connect(self.buttonEditAnimation)
+
+        self.edit_button = QtWidgets.QPushButton(self.editFrames)
+        self.edit_button.setGeometry(QtCore.QRect(145, 0, 81, 71))
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("assets/edit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.edit_button.setIcon(icon2)
+        self.edit_button.clicked.connect(self.edit_file)
+
+        self.delete_button = QtWidgets.QPushButton(self.editFrames)
+        self.delete_button.setGeometry(QtCore.QRect(280, 0, 81, 71))
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap("assets/delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.delete_button.setIcon(icon3)
+        self.delete_button.clicked.connect(self.delete_file)
+
+        for buttons in [self.file_button, self.edit_button, self.delete_button]:
+            buttons.setFont(self.font_(point_size=14))
+            buttons.setStyleSheet("QPushButton{\n"
+                                             "    background-color:rgb(102, 111, 128);\n"
+                                             "    border:2px;\n"
+                                             "    border-radius:25px;\n"
+                                             "}\n"
+                                             "\n"
+                                             "QPushButton:pressed{\n"
+                                             "    background-color: rgb(251, 109, 108);\n"
+                                             "    color:rgb(102, 111, 128)\n"
+                                             "}")
+            buttons.setIconSize(QtCore.QSize(70, 70))
+
+    def font_(self, point_size=None, weight=75, bold=True, family="JetBrainsMono NF SemiBold"):
+        """Returns the font, you can change it your own desire"""
+        font = QtGui.QFont()
+        font.setFamily(family)
+        if point_size is not None:
+            font.setPointSize(point_size)
+        font.setBold(bold)
+        font.setWeight(weight)
+        return font
+
+    def buttonEditAnimation(self):
+        width = 81
+        self.animate = QtCore.QPropertyAnimation(self.editFrames, b'geometry')
+        if self.editFrames.width() == width:
+            self.editFrames.show()
+            self.animate.setStartValue(
+                QtCore.QRect(self.editFrames.x(), self.editFrames.y(), self.editFrames.width(),
+                             self.editFrames.height()))
+            self.animate.setEndValue(
+                QtCore.QRect(self.editFrames.x(), self.editFrames.y(), 361, self.editFrames.height()))
+            self.animate.start()
+
+        else:
+            self.animate.setStartValue(
+                QtCore.QRect(self.editFrames.x(), self.editFrames.y(), self.editFrames.width(),
+                             self.editFrames.height()))
+            self.animate.setEndValue(
+                QtCore.QRect(self.editFrames.x(), self.editFrames.y(), width, self.editFrames.height()))
+            self.animate.start()
+
+    def edit_file(self) -> None:
+        self.filename = QtWidgets.QFileDialog.getExistingDirectory()
+        if len(self.filename) != 0:
+            self.Filename_label.setText(self.filename.split("/")[-1:][0])
+            self.Filepath_label.setText(self.filename)
+        self.buttonEditAnimation()
+
+    def delete_file(self):
+        self.setParent(None)
+
+
 class Ui_ArchiveAid(QtWidgets.QMainWindow):
     def __init__(self):
         """It's the constructor, loading the recent file, if its empty then it will prompt one to add your default"""
@@ -56,75 +198,8 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         return list(set([i for i in extensions if extensions.count(i) > 1]))
 
     def addButtonFrame(self, filename, recent_class=None):
-        """Add Files in the form of a button in the scroll area"""
-        self.File_frames = QtWidgets.QFrame(self.scrollAreaWidgetContents)
-        items = setting.Files_extensions()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.File_frames.sizePolicy().hasHeightForWidth())
-        self.File_frames.setSizePolicy(sizePolicy)
-        self.File_frames.setMinimumSize(QtCore.QSize(380, 90))
-        self.File_frames.setStyleSheet("background-color: rgb(195, 200, 211);\n"
-                                       "border:2px;\n"
-                                       "border-radius:25px;")
-        self.File_frames.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.File_frames.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.File_frames.setObjectName("File_frames")
-
-        self.Filename_label = QtWidgets.QLabel(self.File_frames)
-        self.Filename_label.setGeometry(QtCore.QRect(100, 15, 151, 41))
-        self.Filename_label.setFont(self.font_(point_size=12))
-        self.Filename_label.setText(filename.split("/")[-1:][0])
-        self.Filename_label.setStyleSheet("background-color: rgb(195, 200, 211);\n"
-                                          "color: rgb(0, 0, 0);\n"
-                                          "")
-        self.Filename_label.setObjectName("Filename_label")
-
-        self.Filepath_label = QtWidgets.QLabel(self.File_frames)
-        self.Filepath_label.setGeometry(QtCore.QRect(100, 45, 160, 30))
-        self.Filepath_label.setFont(self.font_(point_size=8))
-        self.Filepath_label.setText(filename)
-        self.Filepath_label.setStyleSheet("background-color: rgb(195, 200, 211);\n"
-                                          "color: rgb(0, 0, 0);\n"
-                                          "")
-        self.Filepath_label.setObjectName("Filepath_label")
-
-        self.extension_select = QtWidgets.QComboBox(self.File_frames)
-        self.extension_select.setGeometry(QtCore.QRect(280, 40, 90, 21))
-        self.extension_select.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-                                            "color:rgb(0, 0, 0);\n"
-                                            "")
-        self.extension_select.setEditable(True)
-        self.extension_select.setObjectName("extension_select")
-        self.extension_select.addItems(items.get_class_ext())
-        self.extension_label = QtWidgets.QLabel(self.File_frames)
-        self.extension_label.setGeometry(QtCore.QRect(280, 20, 71, 21))
-        self.extension_label.setFont(self.font_(point_size=10))
-        self.extension_label.setText('Extensions')
-        self.extension_label.setStyleSheet("color: rgb(0, 0, 0);")
-        self.extension_label.setObjectName("extension_label")
-
-        self.file_select_button = QtWidgets.QPushButton(self.File_frames)
-        self.file_select_button.setGeometry(QtCore.QRect(10, 10, 81, 71))
-        self.file_select_button.setFont(self.font_(point_size=14))
-        self.file_select_button.setStyleSheet("QPushButton{\n"
-                                              "    background-color:rgb(102, 111, 128);\n"
-                                              "    border:2px;\n"
-                                              "    border-radius:25px;\n"
-                                              "}\n"
-                                              "\n"
-                                              "QPushButton:pressed{\n"
-                                              "    background-color: rgb(251, 109, 108);\n"
-                                              "    color:rgb(102, 111, 128)\n"
-                                              "}")
-
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("dev/../assets/file.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.file_select_button.setIcon(icon2)
-        self.file_select_button.setIconSize(QtCore.QSize(70, 70))
-        self.file_select_button.setObjectName("file_select_button")
-        self.verticalLayout.addWidget(self.File_frames)
+        button = FileButton(filename, self.scrollAreaWidgetContents)
+        self.verticalLayout.addWidget(button)
         if recent_class is not None:
             self.extension_select.setCurrentText(recent_class)
 
@@ -132,10 +207,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         """Deletes all the buttons you have done"""
         while self.verticalLayout.count() > 0:
             self.verticalLayout.itemAt(0).widget().setParent(None)
-
-    def del_current_buttons(self):
-        """deletes the current button"""
-        pass
 
     def restore_past(self):
         run_recent = setting.Recent()
@@ -215,6 +286,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                 QtCore.QRect(hidden, self.OptionFrame.y(), self.OptionFrame.width(), self.OptionFrame.height()))
             self.animate.start()
 
+
     def setupUi(self, ArchiveAid):
         """The main Config for the Software"""
         ArchiveAid.setObjectName("ArchiveAid")
@@ -228,7 +300,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         ArchiveAid.setMinimumSize(QtCore.QSize(450, 600))
         ArchiveAid.setMaximumSize(QtCore.QSize(450, 600))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("dev/../assets/logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("assets/logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         ArchiveAid.setWindowIcon(icon)
         ArchiveAid.setStyleSheet("background-color: rgb(251, 109, 108);")
         ArchiveAid.setUnifiedTitleAndToolBarOnMac(True)
