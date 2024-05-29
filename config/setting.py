@@ -1,15 +1,12 @@
-# File = fileinput.input("config/settings.txt")
-import os
-
-
 class Recent:
     def __init__(self):
         self.filesave = []
         with open("config/recent.conf", 'r') as file:
             for i in file:
                 if i[0] != '#' and i[0] != '\n' and i[0] != ' ':
-                    file = i.strip()
-                    self.filesave.append(file.split("-"))
+                    files = i.strip()
+                    self.filesave.append(files.split("-"))
+            file.close()
 
     def get_filepath(self):
         return self.filesave[1:]
@@ -19,6 +16,21 @@ class Recent:
             return self.filesave[0]
         except IndexError:
             return 1
+
+
+class SaveRecent:
+    def __init__(self, src, filepath, file_cat, file_path, file_ext):
+        self.saved = [src.strip()+'\n']
+        for i in zip(filepath, file_cat):
+            self.saved.append(i[0] + '-' + i[1] + '\n')
+
+        for j in zip(file_path, file_ext):
+            self.saved.append(j[0] + '-' + j[1] + '\n')
+
+    def save_config(self):
+        with open('config/recent.conf', 'w') as save:
+            save.write(''.join(self.saved))
+            save.close()
 
 
 class Files_extensions:
