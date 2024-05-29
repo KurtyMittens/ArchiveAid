@@ -6,7 +6,7 @@ from config import setting
 
 
 class FileButton(QtWidgets.QFrame):
-    def __init__(self, filename, frame):
+    def __init__(self, filename, frame, recent_class):
         super().__init__(frame)
         items = setting.Files_extensions()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -16,8 +16,8 @@ class FileButton(QtWidgets.QFrame):
         self.setSizePolicy(sizePolicy)
         self.setMinimumSize(QtCore.QSize(380, 90))
         self.setStyleSheet("background-color: rgb(195, 200, 211);\n"
-                                           "border:2px;\n"
-                                           "border-radius:25px;")
+                           "border:2px;\n"
+                           "border-radius:25px;")
         self.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.setFrameShadow(QtWidgets.QFrame.Raised)
         self.setObjectName("File_frames")
@@ -27,8 +27,8 @@ class FileButton(QtWidgets.QFrame):
         self.Filename_label.setFont(self.font_(point_size=12))
         self.Filename_label.setText(filename.split("/")[-1:][0])
         self.Filename_label.setStyleSheet("background-color: rgb(195, 200, 211);\n"
-                                              "color: rgb(0, 0, 0);\n"
-                                              "")
+                                          "color: rgb(0, 0, 0);\n"
+                                          "")
         self.Filename_label.setObjectName("Filename_label")
 
         self.Filepath_label = QtWidgets.QLabel(self)
@@ -36,15 +36,15 @@ class FileButton(QtWidgets.QFrame):
         self.Filepath_label.setFont(self.font_(point_size=8))
         self.Filepath_label.setText(filename)
         self.Filepath_label.setStyleSheet("background-color: rgb(195, 200, 211);\n"
-                                              "color: rgb(0, 0, 0);\n"
-                                              "")
+                                          "color: rgb(0, 0, 0);\n"
+                                          "")
         self.Filepath_label.setObjectName("Filepath_label")
 
         self.extension_select = QtWidgets.QComboBox(self)
         self.extension_select.setGeometry(QtCore.QRect(280, 40, 90, 21))
         self.extension_select.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-                                                "color:rgb(0, 0, 0);\n"
-                                                "")
+                                            "color:rgb(0, 0, 0);\n"
+                                            "")
         self.extension_select.setEditable(True)
         self.extension_select.setObjectName("extension_select")
         self.extension_select.addItems(items.get_class_ext())
@@ -64,8 +64,8 @@ class FileButton(QtWidgets.QFrame):
         self.editFrames.setSizePolicy(sizePolicy)
         self.editFrames.setGeometry(QtCore.QRect(10, 10, 81, 71))
         self.editFrames.setStyleSheet("background-color: rgb(102, 111, 128);\n"
-                                          "border:2px;\n"
-                                          "border-radius:25px;")
+                                      "border:2px;\n"
+                                      "border-radius:25px;")
         self.editFrames.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.editFrames.setFrameShadow(QtWidgets.QFrame.Raised)
         self.editFrames.setObjectName("editFrames")
@@ -95,16 +95,18 @@ class FileButton(QtWidgets.QFrame):
         for buttons in [self.file_button, self.edit_button, self.delete_button]:
             buttons.setFont(self.font_(point_size=14))
             buttons.setStyleSheet("QPushButton{\n"
-                                             "    background-color:rgb(102, 111, 128);\n"
-                                             "    border:2px;\n"
-                                             "    border-radius:25px;\n"
-                                             "}\n"
-                                             "\n"
-                                             "QPushButton:pressed{\n"
-                                             "    background-color: rgb(251, 109, 108);\n"
-                                             "    color:rgb(102, 111, 128)\n"
-                                             "}")
+                                  "    background-color:rgb(102, 111, 128);\n"
+                                  "    border:2px;\n"
+                                  "    border-radius:25px;\n"
+                                  "}\n"
+                                  "\n"
+                                  "QPushButton:pressed{\n"
+                                  "    background-color: rgb(251, 109, 108);\n"
+                                  "    color:rgb(102, 111, 128)\n"
+                                  "}")
             buttons.setIconSize(QtCore.QSize(70, 70))
+        if recent_class is not None:
+            self.extension_select.setCurrentText(recent_class)
 
     def font_(self, point_size=None, weight=75, bold=True, family="JetBrainsMono NF SemiBold"):
         """Returns the font, you can change it your own desire"""
@@ -162,7 +164,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
             self.addButtonFrame(i[0], i[1])
         self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {run_recent.get_sourcepath()[0]}")
 
-
     def font_(self, point_size=None, weight=75, bold=True, family="JetBrainsMono NF SemiBold"):
         """Returns the font, you can change it your own desire"""
         font = QtGui.QFont()
@@ -198,10 +199,8 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         return list(set([i for i in extensions if extensions.count(i) > 1]))
 
     def addButtonFrame(self, filename, recent_class=None):
-        button = FileButton(filename, self.scrollAreaWidgetContents)
+        button = FileButton(filename, self.scrollAreaWidgetContents, recent_class)
         self.verticalLayout.addWidget(button)
-        if recent_class is not None:
-            self.extension_select.setCurrentText(recent_class)
 
     def del_buttons(self):
         """Deletes all the buttons you have done"""
@@ -234,6 +233,9 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         else:
             self.organize_files(src=source, dic_cat=dict(zip(file_cat, filepath)),
                                 dic_ext=dict(zip(file_ext, file_path)))
+            saveConfig = setting.SaveRecent(source, filepath, file_cat, file_path, file_ext)
+            saveConfig.save_config()
+
 
     def organize_files(self, src, dic_cat, dic_ext):
         organize_guide = setting.Files_extensions()
@@ -252,9 +254,9 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                 except KeyError:
                     shutil.move(f"{src.strip()}/{i}", f"{src.strip()}/{i}")
             except FileNotFoundError:
-                 self.display_criticalMsg(detail="LOLOLO")
-        print(done)
+                self.display_criticalMsg(detail="LOLOLO")
 
+        print(done)
 
     def display_criticalMsg(self, mode='def', detail=""):
         msg = QtWidgets.QMessageBox()
@@ -285,7 +287,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
             self.animate.setEndValue(
                 QtCore.QRect(hidden, self.OptionFrame.y(), self.OptionFrame.width(), self.OptionFrame.height()))
             self.animate.start()
-
 
     def setupUi(self, ArchiveAid):
         """The main Config for the Software"""
@@ -561,7 +562,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.issue_report.setGeometry(QtCore.QRect(10, 170, 210, 70))
         self.issue_report.setText("REPORT AN ISSUE")
 
-
         self.check_history_logs = QtWidgets.QPushButton(self.OptionSelection)
         self.check_history_logs.setGeometry(QtCore.QRect(10, 90, 210, 70))
         self.check_history_logs.setText("CHECK HISTORY LOGS")
@@ -595,6 +595,7 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.file_sourceselection.setObjectName("file_sourceselection")
         ArchiveAid.setCentralWidget(self.centralwidget)
         QtCore.QMetaObject.connectSlotsByName(ArchiveAid)
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
