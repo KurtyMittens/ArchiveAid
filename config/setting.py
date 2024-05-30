@@ -1,4 +1,5 @@
 class Recent:
+    """returns the data written in the config file"""
     def __init__(self):
         self.filesave = []
         with open("config/recent.conf", 'r') as file:
@@ -9,9 +10,11 @@ class Recent:
             file.close()
 
     def get_filepath(self):
+        """returns the file paths from the config"""
         return self.filesave[1:]
 
     def get_sourcepath(self):
+        """returns the source path from the config"""
         try:
             return self.filesave[0]
         except IndexError:
@@ -19,7 +22,9 @@ class Recent:
 
 
 class SaveRecent:
+    """Save the current config to config file"""
     def __init__(self, src, filepath, file_cat, file_path, file_ext):
+        """Gets all the directories, extensions (raw and categorized)"""
         self.saved = [src.strip()+'\n']
         for i in zip(filepath, file_cat):
             self.saved.append(i[0] + '-' + i[1] + '\n')
@@ -28,12 +33,14 @@ class SaveRecent:
             self.saved.append(j[0] + '-' + j[1] + '\n')
 
     def save_config(self):
+        """Save it to the config"""
         with open('config/recent.conf', 'w') as save:
             save.write(''.join(self.saved))
             save.close()
 
 
 class Files_extensions:
+    """Provide the list of the categorized extensions that are supported"""
     def __init__(self) -> None:
         self.file_ext = {
             "Audio": ['.aif', '.cda', '.mid', '.midi', '.mp3', '.mpa', '.ogg', '.wav', '.wma', '.wpl'],
@@ -58,18 +65,12 @@ class Files_extensions:
         }
 
     def get_class_ext(self):
+        """Searching purposes: returns all the class"""
         return self.file_ext.keys()
 
     def find_support(self, file_ext):
+        """Searching purposes: checks if the file extension is supported"""
         for key, values in self.file_ext.items():
             if file_ext in values:
                 return key
         return 1
-
-if __name__ == '__main__':
-    run = Recent()
-    print(run.get_filepath())
-    print(run.get_sourcepath())
-    print(run.get_trashpath())
-    # file = Files_extensions()
-    # print(file.find_support(".py"))
