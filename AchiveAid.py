@@ -160,7 +160,6 @@ class ArchiveAid(QtWidgets.QMainWindow):
     def __init__(self):
         """It's the constructor, loading the recent file, if its empty then it will prompt one to add your default"""
         super().__init__()
-        self.run_recent = setting.Recent()
         self.setup(self)
         self.show()
         self.load_start()
@@ -477,9 +476,10 @@ class ArchiveAid(QtWidgets.QMainWindow):
 
     def load_start(self):
         """Loads all the recent saved configurations, follows recent.conf in the config file"""
-        for i in self.run_recent.get_filepath():
+        run_recent = setting.Recent()
+        for i in run_recent.get_filepath():
             self.addButtonFrame(i[0], i[1])
-        self.file_source_selection.setText(f"CURRENT FILE SOURCE: \n {self.run_recent.get_sourcepath()[0]}")
+        self.file_source_selection.setText(f"CURRENT FILE SOURCE: \n {run_recent.get_sourcepath()[0]}")
 
     def get_file(self):
         """gets the directory to put the organized files"""
@@ -491,7 +491,7 @@ class ArchiveAid(QtWidgets.QMainWindow):
         """get the source directory you want to organize"""
         self.source_file = QtWidgets.QFileDialog.getExistingDirectory()
         if len(self.source_file) != 0:
-            self.file_sourceselection.setText(f"CURRENT FILE SOURCE: \n {self.source_file}")
+            self.file_source_selection.setText(f"CURRENT FILE SOURCE: \n {self.source_file}")
 
     def if_repeat_ext(self, extensions):
         """Checks out for the repeated categorized extensions"""
@@ -519,8 +519,9 @@ class ArchiveAid(QtWidgets.QMainWindow):
 
     def restore_past(self):
         """Restoring the buttons from the recent config"""
+        run_recent = setting.Recent()
         self.del_buttons()
-        for i in self.run_recent.get_filepath():
+        for i in run_recent.get_filepath():
             self.addButtonFrame(i[0], i[1])
 
     def organize_(self):
