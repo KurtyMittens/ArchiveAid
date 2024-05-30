@@ -3,6 +3,7 @@ import shutil
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import setting
+import webbrowser
 
 
 class FileButton(QtWidgets.QFrame):
@@ -236,7 +237,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
             saveConfig = setting.SaveRecent(source, filepath, file_cat, file_path, file_ext)
             saveConfig.save_config()
 
-
     def organize_files(self, src, dic_cat, dic_ext):
         organize_guide = setting.Files_extensions()
         files = os.listdir(src.strip())
@@ -255,7 +255,6 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
                     shutil.move(f"{src.strip()}/{i}", f"{src.strip()}/{i}")
             except FileNotFoundError:
                 self.display_criticalMsg(detail="LOLOLO")
-
         print(done)
 
     def display_criticalMsg(self, mode='def', detail=""):
@@ -287,6 +286,13 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
             self.animate.setEndValue(
                 QtCore.QRect(hidden, self.OptionFrame.y(), self.OptionFrame.width(), self.OptionFrame.height()))
             self.animate.start()
+
+    def open_report_issue(self):
+        return webbrowser.open("https://github.com/KurtyMittens/ArchiveAid/issues/new")
+
+    def open_about(self):
+        return webbrowser.open("https://github.com/KurtyMittens/ArchiveAid/blob/main/README.md")
+
 
     def setupUi(self, ArchiveAid):
         """The main Config for the Software"""
@@ -557,10 +563,12 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.about_button = QtWidgets.QPushButton(self.OptionSelection)
         self.about_button.setGeometry(QtCore.QRect(10, 250, 210, 70))
         self.about_button.setText("ABOUT")
+        self.about_button.clicked.connect(self.open_about)
 
         self.issue_report = QtWidgets.QPushButton(self.OptionSelection)
         self.issue_report.setGeometry(QtCore.QRect(10, 170, 210, 70))
         self.issue_report.setText("REPORT AN ISSUE")
+        self.issue_report.clicked.connect(self.open_report_issue)
 
         self.delete_all = QtWidgets.QPushButton(self.OptionSelection)
         self.delete_all.setGeometry(QtCore.QRect(10, 90, 210, 70))
