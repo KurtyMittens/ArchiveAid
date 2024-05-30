@@ -562,15 +562,16 @@ class Ui_ArchiveAid(QtWidgets.QMainWindow):
         self.issue_report.setGeometry(QtCore.QRect(10, 170, 210, 70))
         self.issue_report.setText("REPORT AN ISSUE")
 
-        self.check_history_logs = QtWidgets.QPushButton(self.OptionSelection)
-        self.check_history_logs.setGeometry(QtCore.QRect(10, 90, 210, 70))
-        self.check_history_logs.setText("CHECK HISTORY LOGS")
+        self.delete_all = QtWidgets.QPushButton(self.OptionSelection)
+        self.delete_all.setGeometry(QtCore.QRect(10, 90, 210, 70))
+        self.delete_all.setText("DELETE ALL CURRENT FILES")
+        self.delete_all.clicked.connect(self.del_buttons)
 
         self.file_sourceselection = QtWidgets.QPushButton(self.OptionSelection)
         self.file_sourceselection.setGeometry(QtCore.QRect(10, 10, 210, 70))
         self.file_sourceselection.clicked.connect(self.get_source)
 
-        for button in [self.about_button, self.issue_report, self.check_history_logs,
+        for button in [self.about_button, self.issue_report, self.delete_all,
                        self.file_sourceselection]:
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
             sizePolicy.setHorizontalStretch(0)
