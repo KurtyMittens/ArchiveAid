@@ -442,7 +442,7 @@ class ArchiveAid(QtWidgets.QMainWindow):
         self.delete_all = QtWidgets.QPushButton(self.OptionSelection)
         self.delete_all.setGeometry(QtCore.QRect(10, 90, 210, 70))
         self.delete_all.setText("DELETE ALL CURRENT FILES")
-        self.delete_all.clicked.connect(self.del_buttons)
+        self.delete_all.clicked.connect(self.delete_all_file)
 
         self.file_source_selection = QtWidgets.QPushButton(self.OptionSelection)
         self.file_source_selection.setGeometry(QtCore.QRect(10, 10, 210, 70))
@@ -520,9 +520,17 @@ class ArchiveAid(QtWidgets.QMainWindow):
     def restore_past(self):
         """Restoring the buttons from the recent config"""
         run_recent = setting.Recent()
-        self.del_buttons()
-        for i in run_recent.get_filepath():
-            self.addButtonFrame(i[0], i[1])
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+        msg.setWindowTitle('Rfreshing Files')
+        msg.setText("THIS WILL REFRESH THIS CONFIG TO RECENT CONFIG SAVED")
+        msg.setInformativeText("Do you wish to proceed?")
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+        retval = msg.exec_()
+        if retval == QtWidgets.QMessageBox.Ok:
+            self.del_buttons()
+            for i in run_recent.get_filepath():
+                self.addButtonFrame(i[0], i[1])
 
     def organize_(self):
         """Organize the files form the source path file to designated directories (filtering)
@@ -533,24 +541,32 @@ class ArchiveAid(QtWidgets.QMainWindow):
         file_cat = []
         file_path = []
         file_ext = []
-        for i in range(self.verticalLayout.count()):
-            file = self.verticalLayout.itemAt(i).widget().children()[1].text()
-            extension = self.verticalLayout.itemAt(i).widget().children()[2].currentText()
-            if '.' in extension:
-                file_path.append(file)
-                file_ext.append(extension)
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+        msg.setWindowTitle('Confirmation')
+        msg.setText("THIS WILL ORGANIZE YOUR FILES")
+        msg.setInformativeText("Do you wish to proceed? (Proceeding also Save this config)")
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+        retval = msg.exec_()
+        if retval == QtWidgets.QMessageBox.Ok:
+            for i in range(self.verticalLayout.count()):
+                file = self.verticalLayout.itemAt(i).widget().children()[1].text()
+                extension = self.verticalLayout.itemAt(i).widget().children()[2].currentText()
+                if '.' in extension:
+                    file_path.append(file)
+                    file_ext.append(extension)
+                else:
+                    filepath.append(file)
+                    file_cat.append(extension)
+            if self.if_repeat_ext(file_cat):
+                self.display_critical_msg(mode='0rep', detail=self.what_repeat_ext(file_cat))
+            if self.if_repeat_ext(file_ext):
+                self.display_critical_msg(mode='1rep', detail=self.what_repeat_ext(file_ext))
             else:
-                filepath.append(file)
-                file_cat.append(extension)
-        if self.if_repeat_ext(file_cat):
-            self.display_critical_msg(mode='0rep', detail=self.what_repeat_ext(file_cat))
-        if self.if_repeat_ext(file_ext):
-            self.display_critical_msg(mode='1rep', detail=self.what_repeat_ext(file_ext))
-        else:
-            self.organize_files(src=source, dic_cat=dict(zip(file_cat, filepath)),
-                                dic_ext=dict(zip(file_ext, file_path)))
-            save_config = setting.SaveRecent(source, filepath, file_cat, file_path, file_ext)
-            save_config.save_config()
+                self.organize_files(src=source, dic_cat=dict(zip(file_cat, filepath)),
+                                    dic_ext=dict(zip(file_ext, file_path)))
+                save_config = setting.SaveRecent(source, filepath, file_cat, file_path, file_ext)
+                save_config.save_config()
 
     def organize_files(self, src, dic_cat, dic_ext):
         """Organize the files form the source path file to designated directories (applying)
@@ -572,7 +588,7 @@ class ArchiveAid(QtWidgets.QMainWindow):
                 except KeyError:
                     shutil.move(f"{src.strip()}/{i}", f"{src.strip()}/{i}")
             except FileNotFoundError:
-                self.display_critical_msg(detail="LOLOLO")
+                self.display_critical_msg(mode="0file", detail="The File Directory cannot be found")
         print(done)
 
     def option_frame_animation(self):
@@ -597,22 +613,63 @@ class ArchiveAid(QtWidgets.QMainWindow):
 
     def open_report_issue(self):
         """Redirects you to "Report an Issue" page in ArchiveAid's Repository"""
-        return webbrowser.open("https://github.com/KurtyMittens/ArchiveAid/issues/new")
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+        msg.setWindowTitle('Confirmation')
+        msg.setText("YOU WILL BE REDIRECTED TO GITHUB")
+        msg.setInformativeText("Do you wish to proceed?")
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+        retval = msg.exec_()
+        if retval == QtWidgets.QMessageBox.Ok:
+            return webbrowser.open("https://github.com/KurtyMittens/ArchiveAid/issues/new")
 
     def open_about(self):
         """Redirects you to "README" page in ArchiveAid's Repository"""
-        return webbrowser.open("https://github.com/KurtyMittens/ArchiveAid/blob/main/README.md")
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+        msg.setWindowTitle('Confirmation')
+        msg.setText("YOU WILL BE REDIRECTED TO GITHUB")
+        msg.setInformativeText("Do you wish to proceed?")
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+        retval = msg.exec_()
+        if retval == QtWidgets.QMessageBox.Ok:
+            return webbrowser.open("https://github.com/KurtyMittens/ArchiveAid/blob/main/README.md")
 
-    def display_critical_msg(self, mode='def', detail=""):
+    def display_critical_msg(self, mode='', detail=""):
         """Displays a dialogue box and shows error"""
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
         msg.setWindowTitle("Something is Wrong!")
-        msg.setText("err0rep: REPEATED CATEGORIZED EXTENSIONS")
-        msg.setInformativeText(
-            "Repetition of Categorized File-Extensions are not allowed! it may break or lose your files")
-        msg.setDetailedText(f"{detail} categories are repeated multiple times...")
+        if mode == '0rep':
+            msg.setText("err0rep: REPEATED CATEGORIZED EXTENSIONS")
+            msg.setInformativeText(
+                "Repetition of Categorized File-Extensions are not allowed! it may break or lose your files")
+            msg.setDetailedText(f"{detail} categories are repeated multiple times...")
+        if mode == '1rep':
+            msg.setText("err1rep: REPEATED RAW EXTENSIONS")
+            msg.setInformativeText(
+                "Repetition of Raw File-Extensions are not allowed! it may break or lose your files")
+            msg.setDetailedText(f"{detail} categories are repeated multiple times...")
+        if mode == '1rep':
+            msg.setText("err1rep: REPEATED RAW EXTENSIONS")
+            msg.setInformativeText(
+                "Repetition of Raw File-Extensions are not allowed! it may break or lose your files")
+            msg.setDetailedText(f"{detail} categories are repeated multiple times...")
+        if mode == '0file':
+            msg.setText("err0file: FILE NOT FOUND")
+            msg.setInformativeText("File is not found")
         retval = msg.exec_()
+
+    def delete_all_file(self):
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+        msg.setWindowTitle('Confirmation')
+        msg.setText("THIS WILL DELETE YOUR CURRENT CONFIGs")
+        msg.setInformativeText("Do you wish to proceed?")
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+        retval = msg.exec_()
+        if retval == QtWidgets.QMessageBox.Ok:
+            self.del_buttons()
 
 
 if __name__ == "__main__":
