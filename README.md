@@ -11,3 +11,5 @@ A multi-platform file organizer which divides your files base on their extension
 </h3> <br>
 
 ## What this app do?
+- This app organize you files based on their file extensions
+- this extensions can be Raw file extensions and Categorized file extensions. 
