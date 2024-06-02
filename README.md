@@ -12,4 +12,23 @@ A multi-platform file organizer which divides your files base on their extension
 
 ## What this app do?
 - This app organize you files based on their file extensions
-- this extensions can be Raw file extensions and Categorized file extensions. 
+- this extensions can be Raw file extensions (.txt, .py, etc) and Categorized file extensions. 
+
+## Categorized File Extensions
+| **Category**    | **File Extensions**       |
+|:-------------:|:---------------:|
+|Audio         | '.aif', '.cda', '.mid', '.midi', '.mp3', '.mpa', '.ogg', '.wav', '.wma', '.wpl'       |
+| Compressed         | '.7z', '.arj', '.deb', '.pkg', '.rar', '.rpm', '.tar.gz', '.z', '.zip'       |
+| Disc        | '.bin', '.dmg', '.iso', '.toast', '.vcd'     |
+| Data/Database        | '.csv', '.dat', '.db', '.dbf', '.log', '.mdb', '.sav', '.sql', '.tar', '.xml'     |
+| Email        | '.email', '.eml', '.emlx', '.msg', '.oft', 'ost', '.pst', '.vcf'     |
+| Executable        | .apk', '.bat', '.bin', '.cgi', '.pl', '.com', '.exe', '.gadget', '.jar', '.msi', '.wsf'    |
+| Fonts/file      | '.fnt', '.fon', '.otf', '.ttf'    |
+| Images      | '.ai', '.bmp', '.gif', '.ico', '.jpeg', '.jpg', '.png', '.ps', '.psd', '.svg', '.tif', '.tiff', '.webp'    |
+| InternetFiles      | '.asp', '.aspx', '.cer', '.cfm', '.css', '.htm', '.html', '.js', '.jsp', '.part', '.php', '.rss', '.xhtml'    |
+| Presentation     | '.key', '.odp', '.pps', '.ppt', '.pptx' |
+| Programming      | '.c', '.class', '.cpp', '.cs', '.h', '.java', '.py', '.sh', '.swift', '.vb', 'ipnyb'   |
+| Spreadsheets      | '.ods', '.xls' '.xlsm', 'xlsx'    |
+| System      | '.bak', '.cab', '.cfg', '.cpl', '.cur', '.dll', '.dmp', '.drv', '.icns', '.ico', '.ini', '.lnk', '.msi', '.sys', '.tmp'    |
+| Video      | '.3g2', '.3gp', '.avi', '.flv', '.h264', '.m4v', '.mkv', '.mov', '.mp4', '.mpg', '.mpeg', '.rm', '.swf', '.vob', '.webm', '.wmv'    |
+| WordProcess      | '.doc', '.docx', '.odt', '.pdf', '.rtf', '.tex', '.txt', '.wpd'  |
