@@ -35,3 +35,24 @@ A multi-platform file organizer which divides your files base on their extension
 
 ## Raw File extensions
 - it can be anything under the sun (as long as it is a file extensions)
+
+## How to Install?
+<table>
+  <tr>
+    <th>Platform</th>
+    <th>Package/Installation Method</th>
+  </tr>
+  <tr>
+    <td>Windows</td>
+    <td>
+      <a href="">
+        <img width="220" alt="Windows Download" src="https://get.todoist.help/hc/article_attachments/4403191721234/WindowsButton.svg">
+      </a>
+  </tr>
+    <td>Arch/Manjaro</td>
+    <td>
+      <p>1st: <code>git clone</code></p>
+      
+    </td>
+  </tr>
+</table>
