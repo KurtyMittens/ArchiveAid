@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Archive/Aid
+Comment=ArchiveAid File Organizer
+Icon=/home/edit/ArchiveAid/assets/logo.png
+Exec=/home/edit/ArchiveAid/run.sh
+Terminal=false
