@@ -49,10 +49,11 @@ A multi-platform file organizer which divides your files base on their extension
         <img width="220" alt="Windows Download" src="https://get.todoist.help/hc/article_attachments/4403191721234/WindowsButton.svg">
       </a>
   </tr>
-    <td>Arch/Manjaro</td>
+    <td>Linux</td>
     <td>
-      <p>1st: <code>git clone</code></p>
-      
+      <a href="">
+        <img width="220" alt="Linux Download" src="https://openclipart.org/image/2000px/201887">
+      </a>
     </td>
   </tr>
 </table>
