@@ -51,7 +51,7 @@ A multi-platform file organizer which divides your files base on their extension
   </tr>
     <td>Linux</td>
     <td>
-      <a href="">
+      <a href="https://downgit.evecalm.com/#/home?url=https://github.com/KurtyMittens/ArchiveAid/tree/main/LINUX">
         <img width="220" alt="Linux Download" src="https://openclipart.org/image/2000px/201887">
       </a>
     </td>
