@@ -32,3 +32,6 @@ A multi-platform file organizer which divides your files base on their extension
 | System      | '.bak', '.cab', '.cfg', '.cpl', '.cur', '.dll', '.dmp', '.drv', '.icns', '.ico', '.ini', '.lnk', '.msi', '.sys', '.tmp'    |
 | Video      | '.3g2', '.3gp', '.avi', '.flv', '.h264', '.m4v', '.mkv', '.mov', '.mp4', '.mpg', '.mpeg', '.rm', '.swf', '.vob', '.webm', '.wmv'    |
 | WordProcess      | '.doc', '.docx', '.odt', '.pdf', '.rtf', '.tex', '.txt', '.wpd'  |
+
+## Raw File extensions
+- it can be anything under the sun (as long as it is a file extensions)
