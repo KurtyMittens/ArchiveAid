@@ -15,23 +15,73 @@ A multi-platform file organizer which divides your files base on their extension
 - this extensions can be Raw file extensions (.txt, .py, etc) and Categorized file extensions. 
 
 ## Categorized File Extensions
-| **Category**    | **File Extensions**       |
-|:-------------:|:---------------:|
-|Audio         | '.aif', '.cda', '.mid', '.midi', '.mp3', '.mpa', '.ogg', '.wav', '.wma', '.wpl'       |
-| Compressed         | '.7z', '.arj', '.deb', '.pkg', '.rar', '.rpm', '.tar.gz', '.z', '.zip'       |
-| Disc        | '.bin', '.dmg', '.iso', '.toast', '.vcd'     |
-| Data/Database        | '.csv', '.dat', '.db', '.dbf', '.log', '.mdb', '.sav', '.sql', '.tar', '.xml'     |
-| Email        | '.email', '.eml', '.emlx', '.msg', '.oft', 'ost', '.pst', '.vcf'     |
-| Executable        | .apk', '.bat', '.bin', '.cgi', '.pl', '.com', '.exe', '.gadget', '.jar', '.msi', '.wsf'    |
-| Fonts/file      | '.fnt', '.fon', '.otf', '.ttf'    |
-| Images      | '.ai', '.bmp', '.gif', '.ico', '.jpeg', '.jpg', '.png', '.ps', '.psd', '.svg', '.tif', '.tiff', '.webp'    |
-| InternetFiles      | '.asp', '.aspx', '.cer', '.cfm', '.css', '.htm', '.html', '.js', '.jsp', '.part', '.php', '.rss', '.xhtml'    |
-| Presentation     | '.key', '.odp', '.pps', '.ppt', '.pptx' |
-| Programming      | '.c', '.class', '.cpp', '.cs', '.h', '.java', '.py', '.sh', '.swift', '.vb', 'ipnyb'   |
-| Spreadsheets      | '.ods', '.xls' '.xlsm', 'xlsx'    |
-| System      | '.bak', '.cab', '.cfg', '.cpl', '.cur', '.dll', '.dmp', '.drv', '.icns', '.ico', '.ini', '.lnk', '.msi', '.sys', '.tmp'    |
-| Video      | '.3g2', '.3gp', '.avi', '.flv', '.h264', '.m4v', '.mkv', '.mov', '.mp4', '.mpg', '.mpeg', '.rm', '.swf', '.vob', '.webm', '.wmv'    |
-| WordProcess      | '.doc', '.docx', '.odt', '.pdf', '.rtf', '.tex', '.txt', '.wpd'  |
+<table>
+  <tr>
+    <th>Class</th>
+    <th>File Extension</th>
+  </tr>
+  <tr>
+    <td>Audio</td>
+    <td>
+      <p><code>'.aif', '.cda', '.mid', '.midi', '.mp3', '.mpa', '.ogg', '.wav', '.wma', '.wpl'</code></p>
+  </tr>
+    <td>Compressed</td>
+    <td>
+      <p><code>'.7z', '.arj', '.deb', '.pkg', '.rar', '.rpm', '.tar.gz', '.z', '.zip'</code></p>
+  </tr>
+  <td> Disc </td>
+    <td>
+      <p><code>'.bin', '.dmg', '.iso', '.toast', '.vcd'</code></p>
+  </tr>
+  <td> Data/Database </td>
+    <td>
+      <p><code>'.csv', '.dat', '.db', '.dbf', '.log', '.mdb', '.sav', '.sql', '.tar', '.xml'</code></p>
+  </tr>
+  <td>  Email </td>
+    <td>
+      <p><code>'.email', '.eml', '.emlx', '.msg', '.oft', 'ost', '.pst', '.vcf' </code></p>
+  </tr>
+  <td> Executable </td>
+    <td>
+      <p><code>'.apk', '.bat', '.bin', '.cgi', '.pl', '.com', '.exe', '.gadget', '.jar', '.msi', '.wsf'</code></p>
+  </tr>
+  <td> Fonts/file </td>
+    <td>
+      <p><code>'.fnt', '.fon', '.otf', '.ttf'</code></p>
+  </tr>
+    <td> Images </td>
+    <td>
+      <p><code>'.ai', '.bmp', '.gif', '.ico', '.jpeg', '.jpg', '.png', '.ps', '.psd', '.svg', '.tif', '.tiff', '.webp'</code></p>
+  </tr>
+  <td> InternetFiles </td>
+    <td>
+      <p><code>'.asp', '.aspx', '.cer', '.cfm', '.css', '.htm', '.html', '.js', '.jsp', '.part', '.php', '.rss', '.xhtml' </code></p>
+  </tr>
+  <td> Presentation </td>
+    <td>
+      <p><code>'.key', '.odp', '.pps', '.ppt', '.pptx' </code></p>
+  </tr>
+  <td> Programming </td>
+    <td>
+      <p><code>'.c', '.class', '.cpp', '.cs', '.h', '.java', '.py', '.sh', '.swift', '.vb', 'ipnyb'</code></p>
+  </tr>
+  <td> Spreadsheets </td>
+    <td>
+      <p><code>'.ods', '.xls' '.xlsm', 'xlsx'</code></p>
+  </tr>
+  <td>  System  </td>
+    <td>
+      <p><code> '.bak', '.cab', '.cfg', '.cpl', '.cur', '.dll', '.dmp', '.drv', '.icns', '.ico', '.ini', '.lnk', '.msi', '.sys', '.tmp'</code></p>
+  </tr>
+  <td>  Video </td>
+    <td>
+      <p><code> '.3g2', '.3gp', '.avi', '.flv', '.h264', '.m4v', '.mkv', '.mov', '.mp4', '.mpg', '.mpeg', '.rm', '.swf', '.vob', '.webm', '.wmv'</code></p>
+  </tr>
+  <td>  WordProcess </td>
+    <td>
+      <p><code> '.doc', '.docx', '.odt', '.pdf', '.rtf', '.tex', '.txt', '.wpd' </code></p>
+  </tr>
+</table>
 
 ## Raw File extensions
 - it can be anything under the sun (as long as it is a file extensions)
